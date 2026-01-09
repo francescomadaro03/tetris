@@ -408,7 +408,7 @@ void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
 # 4 "Source/tetris/backend.c" 2
 # 1 "./Source/timer\\timer.h" 1
-# 14 "./Source/timer\\timer.h"
+# 15 "./Source/timer\\timer.h"
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );
 extern void disable_timer( uint8_t timer_num );
@@ -2219,6 +2219,7 @@ extern char GAMESTATE[21][10];
 
 uint8_t CheckAndUpdateState(TETRONIM t);
 uint8_t CheckBoundariesAndUpdate(TETRONIM t, const int POSITION_MATRIX[][4][2], const int LEN[2]);
+uint8_t CheckHorizontalState(TETRONIM t);
 void UpdateState_I(TETRONIM t);
 
 

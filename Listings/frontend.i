@@ -2052,7 +2052,7 @@ void GUI_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_
 void LCD_ClearArea(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t Color);
 # 6 "Source/tetris/frontend.c" 2
 # 1 "./Source/timer\\timer.h" 1
-# 14 "./Source/timer\\timer.h"
+# 15 "./Source/timer\\timer.h"
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );
 extern void disable_timer( uint8_t timer_num );

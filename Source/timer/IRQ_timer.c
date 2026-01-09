@@ -16,10 +16,21 @@
 #include "tetris/frontend.h"
 #include "led/led.h"
 #include <stdio.h> /*for sprintf*/
+#include "music/music.h"
 
 uint32_t TIMER_SPEED = 0x17D7840;
 uint32_t TIMER_DOUBLE = (0x1312D0 >> 1);
 volatile uint8_t Highest_Y;
+
+
+uint16_t SinTable[45] =                                       
+{
+    410, 467, 523, 576, 627, 673, 714, 749, 778,
+    799, 813, 819, 817, 807, 789, 764, 732, 694, 
+    650, 602, 550, 495, 438, 381, 324, 270, 217,
+    169, 125, 87 , 55 , 30 , 12 , 2  , 0  , 6  ,   
+    20 , 41 , 70 , 105, 146, 193, 243, 297, 353
+};
 
 
 /******************************************************************************
@@ -75,52 +86,31 @@ void TIMER1_IRQHandler (void)
 {
 	
 
+  static int sineticks=0;
+	/* DAC management */	
+	static int currentValue; 
+	currentValue = SinTable[sineticks]*0.7;
+	LPC_DAC->DACR = currentValue <<6;
+	sineticks++;
+	if(sineticks==45){
+		sineticks=0;
+	}
+
+	
   LPC_TIM1->IR = 1;			/* clear interrupt flag */
-	
-	
-	if((LPC_GPIO1 -> FIOPIN & (1<<29)) == 0){
-		disable_timer(0);
-		State = RotateCurrentTetronim(State);
-		MovementInit();
-
-	}
-	
-	else if((LPC_GPIO1 -> FIOPIN & (1<<28)) == 0){
-		disable_timer(0);
-		State = HorizontalMovementHandler(State, 'R');
-		enable_timer(0);
-		
-	}
-	else if((LPC_GPIO1 -> FIOPIN & (1<<27)) == 0){		
-		disable_timer(0);
-		State = HorizontalMovementHandler(State, 'L');
-		enable_timer(0);
-		
-	}
-
-	
-	uint8_t JoystickDown = ((LPC_GPIO1->FIOPIN & (1 << 26)) == 0);
-
-	if (JoystickDown == 1) {
-		if (LPC_TIM0->MR0 != TIMER_DOUBLE) {
-					disable_timer(0);
-					LPC_TIM0->MR0 = TIMER_DOUBLE;
-					enable_timer(0);
-			}
-	} 
-	else {
-			if (LPC_TIM0->MR0 != TIMER_SPEED) {
-					disable_timer(0);
-					LPC_TIM0->MR0 = TIMER_SPEED;
-					if (LPC_TIM0->TC > LPC_TIM0->MR0)
-							LPC_TIM0->TC = 0;
-					enable_timer(0);
-			}
-	}
   return;
 
 }
 
+
+void TIMER2_IRQHandler (void){
+	
+	InitControllingTimer();
+	playNote();
+	LPC_TIM2->IR = 1;
+
+
+}
 /******************************************************************************
 **                            End Of File
 ******************************************************************************/

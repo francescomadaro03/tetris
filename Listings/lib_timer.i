@@ -1784,7 +1784,7 @@ typedef struct
 } LPC_EMAC_TypeDef;
 # 11 "Source/timer/lib_timer.c" 2
 # 1 "Source/timer\\timer.h" 1
-# 14 "Source/timer\\timer.h"
+# 15 "Source/timer\\timer.h"
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );
 extern void disable_timer( uint8_t timer_num );
@@ -1801,26 +1801,42 @@ void enable_timer( uint8_t timer_num )
   {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TCR = 1;
   }
-  else
+  else if (timer_num == 1)
   {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->TCR = 1;
   }
+ else if (timer_num == 2)
+  {
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->TCR = 1;
+  }
+ else if (timer_num == 3)
+  {
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->TCR = 1;
+  }
   return;
 }
-# 44 "Source/timer/lib_timer.c"
+# 52 "Source/timer/lib_timer.c"
 void disable_timer( uint8_t timer_num )
 {
   if ( timer_num == 0 )
   {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TCR = 0;
   }
-  else
+  else if (timer_num == 1)
   {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->TCR = 0;
   }
+ else if (timer_num == 2)
+  {
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->TCR = 0;
+  }
+ else if (timer_num == 3)
+  {
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->TCR = 0;
+  }
   return;
 }
-# 66 "Source/timer/lib_timer.c"
+# 82 "Source/timer/lib_timer.c"
 void reset_timer( uint8_t timer_num )
 {
   uint32_t regVal;
@@ -1831,11 +1847,23 @@ void reset_timer( uint8_t timer_num )
  regVal |= 0x02;
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TCR = regVal;
   }
-  else
+  else if ( timer_num == 1)
   {
  regVal = ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->TCR;
  regVal |= 0x02;
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->TCR = regVal;
+  }
+ else if ( timer_num == 2)
+  {
+ regVal = ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->TCR;
+ regVal |= 0x02;
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->TCR = regVal;
+  }
+ else if ( timer_num == 3)
+  {
+ regVal = ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->TCR;
+ regVal |= 0x02;
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->TCR = regVal;
   }
   return;
 }
@@ -1901,7 +1929,7 @@ uint32_t init_timer ( uint8_t timer_num, uint32_t TimerInterval )
 // <<< end of configuration section >>>
 
  __NVIC_EnableIRQ(TIMER0_IRQn);
- __NVIC_SetPriority(TIMER0_IRQn, 0);
+ __NVIC_SetPriority(TIMER0_IRQn,0);
  return (1);
   }
   else if ( timer_num == 1 )
@@ -1910,7 +1938,25 @@ uint32_t init_timer ( uint8_t timer_num, uint32_t TimerInterval )
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->MCR = 3;
 
  __NVIC_EnableIRQ(TIMER1_IRQn);
- __NVIC_SetPriority(TIMER1_IRQn, 1);
+ __NVIC_SetPriority(TIMER1_IRQn,1);
+ return (1);
+  }
+ else if ( timer_num == 2 )
+  {
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->MR0 = TimerInterval;
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->MCR = 3;
+
+ __NVIC_EnableIRQ(TIMER2_IRQn);
+ __NVIC_SetPriority(TIMER2_IRQn,1);
+ return (1);
+  }
+ else if ( timer_num == 3 )
+  {
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->MR0 = TimerInterval;
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->MCR = 3;
+
+ __NVIC_EnableIRQ(TIMER3_IRQn);
+ __NVIC_SetPriority(TIMER3_IRQn,1);
  return (1);
   }
   return (0);

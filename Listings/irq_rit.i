@@ -1803,7 +1803,7 @@ void LED_Off (unsigned int num);
 void LED_Out(unsigned int value);
 # 13 "Source/RIT/IRQ_RIT.c" 2
 # 1 "./Source/timer/timer.h" 1
-# 14 "./Source/timer/timer.h"
+# 15 "./Source/timer/timer.h"
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );
 extern void disable_timer( uint8_t timer_num );
@@ -1919,6 +1919,7 @@ void RIT_IRQHandler (void)
  volatile uint32_t CurrentSpeed = 0x17D7840;
  volatile uint32_t DoubleSpeed = CurrentSpeed >> 1;
  volatile int KEY1_PIN_VAL = (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00040) )->FIOPIN & (1 << 11));
+ volatile uint8_t HorizontalFlag;
 
 
  if(KEY1_PIN_VAL == 0){
@@ -1992,23 +1993,24 @@ void RIT_IRQHandler (void)
    JOYSTICK_MOVED = 1;
   }
  }
- else if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIOPIN & (1<<28)) == 0){
-  if(JOYSTICK_MOVED == 0){
-  JOYSTICK_MOVED = 1;
-  disable_timer(0);
-  State = HorizontalMovementHandler(State, 'R');
-  enable_timer(0);
-  }
-
- }
- else if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIOPIN & (1<<27)) == 0){
-  if(JOYSTICK_MOVED == 0){
-   JOYSTICK_MOVED = 1;
+ else if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) ) -> FIOPIN & (1<<28)) == 0){
    disable_timer(0);
-   State = HorizontalMovementHandler(State, 'L');
+   HorizontalFlag = CheckHorizontalState(State);
+   if (HorizontalFlag == 0) {
+    State = HorizontalMovementHandler(State, 'R');
+   }
    enable_timer(0);
+
   }
- }
+  else if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) ) -> FIOPIN & (1<<27)) == 0){
+   disable_timer(0);
+   HorizontalFlag = CheckHorizontalState(State);
+   if (HorizontalFlag == 0) {
+    State = HorizontalMovementHandler(State, 'L');
+   }
+   enable_timer(0);
+
+  }
  else {
   JOYSTICK_MOVED = 0;
  }

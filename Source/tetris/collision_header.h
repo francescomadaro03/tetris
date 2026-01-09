@@ -6,6 +6,7 @@
 #define __COLLISION_LIBRARY
 uint8_t CheckAndUpdateState(TETRONIM t);
 uint8_t CheckBoundariesAndUpdate(TETRONIM t, const int POSITION_MATRIX[][4][2], const int LEN[2]);
+uint8_t CheckHorizontalState(TETRONIM t);
 void UpdateState_I(TETRONIM t);
 
 

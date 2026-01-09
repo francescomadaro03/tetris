@@ -265,3 +265,89 @@ uint8_t CheckAndUpdateState(TETRONIM t){
 
 
 }
+
+
+//DEFINITION OF HORIZONTAL POSITION MATRIX
+
+const int I_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {-1,0}, {-1,0}, {-1,0}}, {{-1,0},{-1,1},{-1,2},{-1,3}}};
+const int I_HORIZONTAL_SHAPE_R[2][4][2] = {{{4,0}, {4,0}, {4,0}, {4,0}}, {{1,0},{1,1},{1,2},{1,3}}};
+const int I_HORIZONTAL_LEN[2] = {1,4};
+
+const int O_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {-1,1}, {-1,0}, {-1,1}},{{-1,0},{-1,1},{-1,0},{-1,1}}};
+const int O_HORIZONTAL_SHAPE_R[2][4][2] = {{{2,0}, {2,1}, {2,0}, {2,1}}, {{2,0}, {2,1}, {2,0}, {2,1}}};
+const int O_HORIZONTAL_LEN[2] = {2,2};
+
+const int T_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {0,1}, {-1,0}, {-1,0}}, {{0,0},{-1,1},{0,2},{0,2}}};
+const int T_HORIZONTAL_SHAPE_R[2][4][2] = {{{3,0}, {2,1}, {3,0}}, {{2,0}, {2,1}, {2,2}}};
+const int T_HORIZONTAL_LEN[2] = {2,3};
+
+const int J_HORIZONTAL_SHAPE_L[2][4][2] = {{{0,0}, {0,1}, {-1,2},{0,0}}, {{-1,0},{-1,1},{-1,0},{-1,0}}};
+const int J_HORIZONTAL_SHAPE_R[2][4][2] = {{{2,0}, {2,1}, {2,2},{2,0}}, {{1,0}, {3,1}, {1,2},{1,0}}};
+const int J_HORIZONTAL_LEN[2] = {3,2};
+
+const int L_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {-1,1}, {-1,2}, {-1,0}}, {{-1,1},{1,0},{-1,1}, {1,0}}};
+const int L_HORIZONTAL_SHAPE_R[2][4][2] = {{{1,0}, {1,1}, {2,2}, {1,0}}, {{3,0}, {3,1}, {3,0}, {3,1}}};
+const int L_HORIZONTAL_LEN[2] = {3,2};
+
+const int S_HORIZONTAL_SHAPE_L[2][4][2] = {{{0,0}, {-1,1}, {0,0}, {-1,1}}, {{-1,0},{-1,1},{0,2}, {-1,0}}};
+const int S_HORIZONTAL_SHAPE_R[2][4][2] = {{{3,0}, {2,1}, {3,0}, {2,1}}, {{1,0}, {2,1}, {2,2}, {2,1}}};
+const int S_HORIZONTAL_LEN[2] = {2,3};
+
+const int Z_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {0,1}, {-1,0}, {0,1}}, {{0,0},{-1,1},{-1,2}, {0,0}}};
+const int Z_HORIZONTAL_SHAPE_R[2][4][2] = {{{2,0}, {3,1}, {2,0}, {3,1}}, {{2,0}, {2,1}, {1,2}, {2,0}}};
+const int Z_HORIZONTAL_LEN[2] = {2,3};
+
+uint8_t CheckHorizontalState(TETRONIM t){
+	int x = (t.COORD[0] - 10) / 15;
+	int y = (t.COORD[1] - 10) / 15;
+
+	uint8_t ReturnValue = 0;
+	
+	switch(t.TETRONIM_TYPE){
+		case 'Z':
+			ReturnValue = CheckBoundariesAndUpdate(t, Z_HORIZONTAL_SHAPE_L, Z_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, Z_HORIZONTAL_SHAPE_R, Z_HORIZONTAL_LEN);
+		}
+			break;
+		case 'I': 
+			ReturnValue = CheckBoundariesAndUpdate(t, I_HORIZONTAL_SHAPE_L, I_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, I_HORIZONTAL_SHAPE_R, I_HORIZONTAL_LEN);
+		}
+			break;
+		case 'O':
+			ReturnValue = CheckBoundariesAndUpdate(t, O_HORIZONTAL_SHAPE_L, O_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, O_HORIZONTAL_SHAPE_R, O_HORIZONTAL_LEN);
+		}
+			break;
+		case 'T':
+			ReturnValue = CheckBoundariesAndUpdate(t, T_HORIZONTAL_SHAPE_L, T_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, T_HORIZONTAL_SHAPE_R, T_HORIZONTAL_LEN);
+		}
+			break;
+		case 'J':
+			ReturnValue = CheckBoundariesAndUpdate(t, J_HORIZONTAL_SHAPE_L, J_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, J_HORIZONTAL_SHAPE_R, J_HORIZONTAL_LEN);
+		}
+			break;
+		case 'L':
+			ReturnValue = CheckBoundariesAndUpdate(t, L_HORIZONTAL_SHAPE_L, L_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, L_HORIZONTAL_SHAPE_R, L_HORIZONTAL_LEN);
+		}
+			break;
+		case 'S':
+			ReturnValue = CheckBoundariesAndUpdate(t, S_HORIZONTAL_SHAPE_L, S_HORIZONTAL_LEN);
+		if (ReturnValue == 0) {
+			ReturnValue = CheckBoundariesAndUpdate(t, S_HORIZONTAL_SHAPE_R, S_HORIZONTAL_LEN);
+		}	
+		break;
+		default:
+			break;
+	}
+	return ReturnValue;
+}

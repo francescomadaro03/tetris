@@ -49,6 +49,7 @@ void RIT_IRQHandler (void)
 	volatile uint32_t CurrentSpeed = 0x17D7840;
 	volatile uint32_t DoubleSpeed = CurrentSpeed >> 1;
 	volatile int KEY1_PIN_VAL = (LPC_GPIO2->FIOPIN & (1 << 11));
+	volatile uint8_t HorizontalFlag;
 
 		
 	if(KEY1_PIN_VAL == 0){
@@ -122,23 +123,24 @@ void RIT_IRQHandler (void)
 			JOYSTICK_MOVED = 1;
 		}
 	}
-	else if((LPC_GPIO1->FIOPIN & (1<<28)) == 0){
-		if(JOYSTICK_MOVED == 0){
-		JOYSTICK_MOVED = 1;
-		disable_timer(0);
-		State = HorizontalMovementHandler(State, 'R');
-		enable_timer(0);		
-		}
-
-	}
-	else if((LPC_GPIO1->FIOPIN & (1<<27)) == 0){
-		if(JOYSTICK_MOVED == 0){
-			JOYSTICK_MOVED = 1;
+	else if((LPC_GPIO1 -> FIOPIN & (1<<28)) == 0){
 			disable_timer(0);
-			State = HorizontalMovementHandler(State, 'L');
+			HorizontalFlag = CheckHorizontalState(State);
+			if (HorizontalFlag == 0) {
+				State = HorizontalMovementHandler(State, 'R');
+			}
 			enable_timer(0);
+			
 		}
-	}
+		else if((LPC_GPIO1 -> FIOPIN & (1<<27)) == 0){		
+			disable_timer(0);
+			HorizontalFlag = CheckHorizontalState(State);
+			if (HorizontalFlag == 0) {
+				State = HorizontalMovementHandler(State, 'L');
+			}
+			enable_timer(0);
+			
+		}
 	else {
 		JOYSTICK_MOVED = 0;
 	}

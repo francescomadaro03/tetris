@@ -1915,7 +1915,7 @@ typedef struct
 } LPC_EMAC_TypeDef;
 # 12 "Source/timer/IRQ_timer.c" 2
 # 1 "Source/timer\\timer.h" 1
-# 14 "Source/timer\\timer.h"
+# 15 "Source/timer\\timer.h"
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );
 extern void disable_timer( uint8_t timer_num );
@@ -2360,11 +2360,26 @@ extern __attribute__((__nothrow__)) int _fisatty(FILE * ) __attribute__((__nonnu
 extern __attribute__((__nothrow__)) void __use_no_semihosting_swi(void);
 extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
 # 19 "Source/timer/IRQ_timer.c" 2
+# 1 "./Source\\music/music.h" 1
+# 96 "./Source\\music/music.h"
+void InitControllingTimer(void);
+void playNote(void);
+# 20 "Source/timer/IRQ_timer.c" 2
 
 uint32_t TIMER_SPEED = 0x17D7840;
 uint32_t TIMER_DOUBLE = (0x1312D0 >> 1);
 volatile uint8_t Highest_Y;
-# 37 "Source/timer/IRQ_timer.c"
+
+
+uint16_t SinTable[45] =
+{
+    410, 467, 523, 576, 627, 673, 714, 749, 778,
+    799, 813, 819, 817, 807, 789, 764, 732, 694,
+    650, 602, 550, 495, 438, 381, 324, 270, 217,
+    169, 125, 87 , 55 , 30 , 12 , 2 , 0 , 6 ,
+    20 , 41 , 70 , 105, 146, 193, 243, 297, 353
+};
+# 48 "Source/timer/IRQ_timer.c"
 void TIMER0_IRQHandler (void)
 {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->IR = 1;
@@ -2392,53 +2407,33 @@ void TIMER0_IRQHandler (void)
 
   return;
 }
-# 74 "Source/timer/IRQ_timer.c"
+# 85 "Source/timer/IRQ_timer.c"
 void TIMER1_IRQHandler (void)
 {
 
 
+  static int sineticks=0;
+
+ static int currentValue;
+ currentValue = SinTable[sineticks]*0.7;
+ ((LPC_DAC_TypeDef *) ((0x40080000UL) + 0x0C000) )->DACR = currentValue <<6;
+ sineticks++;
+ if(sineticks==45){
+  sineticks=0;
+ }
+
+
   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->IR = 1;
-
-
- if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) ) -> FIOPIN & (1<<29)) == 0){
-  disable_timer(0);
-  State = RotateCurrentTetronim(State);
-  MovementInit();
-
- }
-
- else if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) ) -> FIOPIN & (1<<28)) == 0){
-  disable_timer(0);
-  State = HorizontalMovementHandler(State, 'R');
-  enable_timer(0);
-
- }
- else if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) ) -> FIOPIN & (1<<27)) == 0){
-  disable_timer(0);
-  State = HorizontalMovementHandler(State, 'L');
-  enable_timer(0);
-
- }
-
-
- uint8_t JoystickDown = ((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIOPIN & (1 << 26)) == 0);
-
- if (JoystickDown == 1) {
-  if (((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0 != TIMER_DOUBLE) {
-     disable_timer(0);
-     ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0 = TIMER_DOUBLE;
-     enable_timer(0);
-   }
- }
- else {
-   if (((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0 != TIMER_SPEED) {
-     disable_timer(0);
-     ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0 = TIMER_SPEED;
-     if (((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TC > ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0)
-       ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TC = 0;
-     enable_timer(0);
-   }
- }
   return;
+
+}
+
+
+void TIMER2_IRQHandler (void){
+
+ InitControllingTimer();
+ playNote();
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->IR = 1;
+
 
 }

@@ -1829,7 +1829,7 @@ uint8_t setCalibrationMatrix( Coordinate * displayPtr,Coordinate * screenPtr,Mat
 uint8_t getDisplayPoint(Coordinate * displayPtr,Coordinate * screenPtr,Matrix * matrixPtr );
 # 27 "Source/sample.c" 2
 # 1 "./Source/timer\\timer.h" 1
-# 14 "./Source/timer\\timer.h"
+# 15 "./Source/timer\\timer.h"
 extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
 extern void enable_timer( uint8_t timer_num );
 extern void disable_timer( uint8_t timer_num );
@@ -1937,10 +1937,16 @@ void EINT1_IRQHandler(void);
 void EINT2_IRQHandler(void);
 void EINT3_IRQHandler(void);
 # 33 "Source/sample.c" 2
+# 1 "Source\\music/music.h" 1
+# 96 "Source\\music/music.h"
+void InitControllingTimer(void);
+void playNote(void);
+# 34 "Source/sample.c" 2
 
 
 
 
+extern uint8_t ScaleFlag; // <- ScaleFlag needs to visible in order for the emulator to find the symbol (can be placed also inside system_LPC17xx.h but since it is RO, it needs more work)
 
 
 
@@ -1968,6 +1974,15 @@ int main(void)
 
 
  init_tetris_frontend();
+ //DAC INITIALIZATION
+ ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 |= (1<<21);
+ ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 &= ~(1<<20);
+ ((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00000) )->FIODIR |= (1<<26);
+
+ InitControllingTimer();
+
+
+
  //NewTetroid();
 
 

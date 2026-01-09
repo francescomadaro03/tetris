@@ -30,6 +30,8 @@
 #include "RIT/RIT.h"
 #include "joystick/joystick.h"
 #include "button.h"
+#include "music/music.h"
+
 
 
 #ifdef SIMULATOR
@@ -61,6 +63,15 @@ int main(void)
 
 	
 	init_tetris_frontend();
+	//DAC INITIALIZATION
+	LPC_PINCON->PINSEL1 |= (1<<21);
+	LPC_PINCON->PINSEL1 &= ~(1<<20);			/* pin 0.26 is AOUT */
+	LPC_GPIO0->FIODIR |= (1<<26);					
+	
+	InitControllingTimer();
+	
+	
+	
 	//NewTetroid();
 	
 

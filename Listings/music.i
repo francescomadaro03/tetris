@@ -1,12 +1,17 @@
-# 1 "Source/tetris/collision_library.c"
+# 1 "Source/music/music.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 404 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "Source/tetris/collision_library.c" 2
-# 1 "Source/tetris\\frontend.h" 1
-
+# 1 "Source/music/music.c" 2
+# 1 "Source/music\\music.h" 1
+# 96 "Source/music\\music.h"
+void InitControllingTimer(void);
+void playNote(void);
+# 2 "Source/music/music.c" 2
+# 1 "./Source/timer\\timer.h" 1
+# 10 "./Source/timer\\timer.h"
 # 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdint.h" 1 3
 # 56 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdint.h" 3
 typedef signed char int8_t;
@@ -61,128 +66,21 @@ typedef unsigned int uintptr_t;
 
 typedef signed long long intmax_t;
 typedef unsigned long long uintmax_t;
-# 3 "Source/tetris\\frontend.h" 2
-# 1 "Source/tetris\\backend.h" 1
+# 11 "./Source/timer\\timer.h" 2
 
 
 
 
+extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
+extern void enable_timer( uint8_t timer_num );
+extern void disable_timer( uint8_t timer_num );
+extern void reset_timer( uint8_t timer_num );
+extern void start_timer(void);
 
-extern char GAMESTATE[21][10];
+extern void TIMER0_IRQHandler (void);
+extern void TIMER1_IRQHandler (void);
+# 3 "Source/music/music.c" 2
 
-
-
-
- typedef struct {
-  char TETRONIM_TYPE;
-  char COLOR;
-  uint16_t COLOR_CODE;
-  int ROTATE;
-  uint16_t COORD[2];
-  uint16_t FLOOR_COORD[8]; //first two pairs are coordinates of the no rotation, then the rotation
-  uint8_t HORIZONTAL_LENGTH; // number of blocks from upper coordinates
-  uint8_t HORIZONTAL_ROTATE_LENGTH;
-  uint8_t VERTICAL_LENGTH;
-
-
- } TETRONIM;
-# 33 "Source/tetris\\backend.h"
-extern void ConfigurationProcedureTiming(void);
-extern void MovementInit(void);
-extern TETRONIM VerticalMovementHandler(TETRONIM t);
-extern TETRONIM HorizontalMovementHandler(TETRONIM t, char direction);
-extern uint8_t CheckCollisions(TETRONIM State);
-extern TETRONIM RotateCurrentTetronim(TETRONIM t);
-extern uint8_t CheckFullRow(uint8_t row);
-void CheckGAMESTATE(uint8_t row);
-void VoidField(uint8_t row, uint8_t LastIndexFull);
-void RedrawField(uint8_t start, uint8_t LastIndexFull);
-void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
-void SpeedUpTimer(uint8_t flag, uint32_t speed);
-void HardDropTetroid(TETRONIM State);
-extern void Reset_GAMESTATE(void);
-# 4 "Source/tetris\\frontend.h" 2
-
-
-
-
-extern volatile TETRONIM State;
-
-extern void init_tetris_frontend(void);
-extern void DrawSquare (uint16_t x0, uint16_t y0, uint16_t color);
-extern char* ScoreToString(uint16_t score);
-static uint16_t LFSR_Random32(uint16_t state);
-extern void DrawTetroid_I(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_O(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_T(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_J(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_L(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_S(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_Z(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern char RandomTetroidGenerator(void);
-extern char FindColorFromCode(uint16_t color);
-extern uint16_t Find_Color_From_Type(char typeT);
-TETRONIM TetroidDrawer(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation, char typeT);
-extern void NewTetroid(void);
-extern void ChangeDirection(TETRONIM State, char direction);
-extern uint16_t FindColorCodeFromColor(char color);
-extern void GameOver(void);
-void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim);
-# 2 "Source/tetris/collision_library.c" 2
-# 1 "Source/tetris\\backend.h" 1
-
-
-
-
-
-extern char GAMESTATE[21][10];
-# 3 "Source/tetris/collision_library.c" 2
-# 1 "Source/tetris\\collision_header.h" 1
-# 1 "Source/tetris\\frontend.h" 1
-
-
-# 1 "Source/tetris\\backend.h" 1
-
-
-
-
-
-extern char GAMESTATE[21][10];
-# 4 "Source/tetris\\frontend.h" 2
-# 2 "Source/tetris\\collision_header.h" 2
-# 1 "Source/tetris\\backend.h" 1
-
-
-
-
-
-extern char GAMESTATE[21][10];
-# 3 "Source/tetris\\collision_header.h" 2
-
-
-
-
-uint8_t CheckAndUpdateState(TETRONIM t);
-uint8_t CheckBoundariesAndUpdate(TETRONIM t, const int POSITION_MATRIX[][4][2], const int LEN[2]);
-uint8_t CheckHorizontalState(TETRONIM t);
-void UpdateState_I(TETRONIM t);
-
-
-
-
-//MATRIX OF POSITIONS
-
-
-extern const int I_SHAPE[2][4][2];
-extern const int O_SHAPE[2][4][2];
-extern const int T_SHAPE[2][4][2];
-extern const int J_SHAPE[2][4][2];
-extern const int L_SHAPE[2][4][2];
-extern const int S_SHAPE[2][4][2];
-extern const int Z_SHAPE[2][4][2];
-# 4 "Source/tetris/collision_library.c" 2
-# 1 "./Source/GLCD\\GLCD.h" 1
-# 26 "./Source/GLCD\\GLCD.h"
 # 1 "C:/Users/frama/AppData/Local/Arm/Packs/Keil/LPC1700_DFP/2.7.2/Device/Include\\LPC17xx.h" 1
 # 41 "C:/Users/frama/AppData/Local/Arm/Packs/Keil/LPC1700_DFP/2.7.2/Device/Include\\LPC17xx.h"
 typedef enum IRQn
@@ -1899,363 +1797,104 @@ typedef struct
        uint32_t RESERVED8;
   volatile uint32_t Module_ID;
 } LPC_EMAC_TypeDef;
-# 27 "./Source/GLCD\\GLCD.h" 2
-# 90 "./Source/GLCD\\GLCD.h"
-void LCD_Initialization(void);
-void LCD_Clear(uint16_t Color);
-uint16_t LCD_GetPoint(uint16_t Xpos,uint16_t Ypos);
-void LCD_SetPoint(uint16_t Xpos,uint16_t Ypos,uint16_t point);
-void LCD_DrawLine( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 , uint16_t color );
-void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, uint16_t bkColor );
-void GUI_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_t bkColor);
-void LCD_ClearArea(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t Color);
-# 5 "Source/tetris/collision_library.c" 2
+# 5 "Source/music/music.c" 2
 
+extern volatile starting_game;
+int melody[] = {
+    // Battuta 1 (E)
+    659, 494, 523, 587, 523, 494,
+    // Battuta 2 (Am)
+    440, 440, 523, 659, 587, 523,
+    // Battuta 3 (E/G# - ma melodia senza alterazioni)
+    494, 494, 523, 587, 659,
+    // Battuta 4 (Am) - La pausa finale è accorpata all'ultimo A4
+    523, 440, 440,
 
+    // Battuta 5 (Dm)
+    587, 698, 880, 784, 698,
+    // Battuta 6 (C)
+    659, 523, 659, 587, 523,
+    // Battuta 7 (E/B)
+    494, 494, 523, 587, 659,
+    // Battuta 8 (Am) - La pausa finale è accorpata all'ultimo A4
+    523, 440, 440
+};
 
+uint8_t noteDurations[] = {
+    // Battuta 1: Tam(4), ti(2)-ti(2), Tam(4), ti(2)-ti(2)
+    4, 2, 2, 4, 2, 2,
 
+    // Battuta 2: Tam(4), ti(2)-ti(2), Tam(4), ti(2)-ti(2)
+    4, 2, 2, 4, 2, 2,
 
+    // Battuta 3: Tam(4), ti(2)-ti(2), Tam(4), Tam(4)
+    4, 2, 2, 4, 4,
 
+    // Battuta 4: Tam(4), Tam(4), Taaaaam(8 - nota+pausa)
+    4, 4, 8,
 
+    // Battuta 5: Taaam(6 - puntata), ti(2), Tam(4), ti(2)-ti(2)
+    6, 2, 4, 2, 2,
 
-//DEFINITION OF POSITION MATRICE
+    // Battuta 6: Taaam(6 - puntata), ti(2), Tam(4), ti(2)-ti(2)
+    6, 2, 4, 2, 2,
 
-const int I_SHAPE[2][4][2] = {{{0,1}, {1,1}, {2,1}, {3,1}}, {{0,4},{0,4},{0,4},{0,4}}};
-const int I_LEN[2] = {4,1};
+    // Battuta 7: Tam(4), ti(2)-ti(2), Tam(4), Tam(4)
+    4, 2, 2, 4, 4,
 
-const int O_SHAPE[2][4][2] = {{{0,2}, {1,2}, {0,2}, {1,2}}, {{0,2}, {1,2}, {0,2}, {1,2}}};
-const int O_LEN[2] = {2,2};
+    // Battuta 8: Tam(4), Tam(4), Taaaaam(8 - nota+pausa)
+    4, 4, 8
+};
 
-const int T_SHAPE[2][4][2] = {{{0,1},{1,2}, {2,1}, {2,1}}, {{0,2}, {1,3}, {1,3}, {1,3}}};
-const int T_LEN[2] = {3,2};
-
-const int J_SHAPE[2][4][2] = {{{0,3},{1,3}, {1,3}, {1,3}}, {{0,2}, {1,2}, {2,2}, {2,2}}};
-const int J_LEN[2] = {2,3};
-
-const int L_SHAPE[2][4][2] = {{{0,3},{1,3}, {1,3}, {1,3}}, {{0,2}, {1,1}, {2,1}, {2,1}}};
-const int L_LEN[2] = {2,3};
-
-const int S_SHAPE[2][4][2] = {{{0,2}, {1,2}, {2,1}, {2,1}}, {{0,2}, {1,3}, {1,3}, {1,3}}};
-const int S_LEN[2] = {3,2};
-
-
-const int Z_SHAPE[2][4][2] = {{{0,1}, {1,2}, {2,2}, {2,2}}, {{0,3}, {1,2}, {0,3}, {0,3}}};
-const int Z_LEN[2] = {3,2};
-
-void UpdateState_I(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
- char str[2];
- str[0] = t.COLOR;
- str[1] = '\0';
-
- if(t.ROTATE == 0){
-
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y][x+2] = t.COLOR;
-  GAMESTATE[y][x+3] = t.COLOR;
-
- }
- else if(t.ROTATE == 1) {
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+2][x] = t.COLOR;
-  GAMESTATE[y+3][x] = t.COLOR;
-
- }
-
-}
-
-void UpdateState_O(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- GAMESTATE[y][x] = t.COLOR;
- GAMESTATE[y+1][x] = t.COLOR;
- GAMESTATE[y][x+1] = t.COLOR;
- GAMESTATE[y+1][x+1] = t.COLOR;
-
-}
-
-void UpdateState_T(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- if(t.ROTATE == 0){
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y][x+2] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-
- }
- else if(t.ROTATE == 1){
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-  GAMESTATE[y+2][x+1] = t.COLOR;
- }
-
-}
-
-void UpdateState_J(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- if(t.ROTATE == 0){
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-  GAMESTATE[y+2][x+1] = t.COLOR;
-  GAMESTATE[y+2][x] = t.COLOR;
-
- }
- else if(t.ROTATE == 1){
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-  GAMESTATE[y+1][x+2] = t.COLOR;
- }
+uint16_t ClockCyclesFromFrequency(int freq){
+ uint16_t ClockCycles;
+ ClockCycles = 25000000 / (freq * 45);
+ return ClockCycles;
 
 
 }
 
-void UpdateState_L(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- if(t.ROTATE == 0){
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+2][x] = t.COLOR;
-  GAMESTATE[y+2][x+1] = t.COLOR;
-
+void InitControllingTimer(void){
+ static uint32_t iterations = 0;
+ volatile uint32_t TimerLength = 0x2DC6C0*noteDurations[iterations];
+ disable_timer(2);
+ reset_timer(2);
+ if(starting_game == 1){
+  init_timer(2, TimerLength);
  }
- else if(t.ROTATE == 1){
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y][x+2] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
+ else {
+  ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->MR0 = TimerLength;
+  ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->MCR = 3;
+ }
+ enable_timer(2);
+ iterations++;
+ if(iterations > (sizeof(melody) / sizeof(melody[0]))){
+  iterations = 0;
  }
 
 
 
 }
-void UpdateState_S(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
 
- if(t.ROTATE == 0){
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y][x+2] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-
+void playNote(void){
+ static uint32_t iterations = 0;
+ volatile uint32_t ClockCyclesCount = ClockCyclesFromFrequency(melody[iterations]);
+ disable_timer(1);
+ reset_timer(1);
+ if(starting_game == 1){
+  init_timer(1, ClockCyclesCount);
  }
- else if(t.ROTATE == 1){
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-  GAMESTATE[y+2][x+1] = t.COLOR;
+ else {
+  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->MR0 = ClockCyclesCount;
+  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->MCR = 3;
  }
-
-}
-
-void UpdateState_Z(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- if(t.ROTATE == 0){
-  GAMESTATE[y][x] = t.COLOR;
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-  GAMESTATE[y+1][x+2] = t.COLOR;
-
-
- }
- else if(t.ROTATE == 1){
-  GAMESTATE[y][x+1] = t.COLOR;
-  GAMESTATE[y+1][x+1] = t.COLOR;
-  GAMESTATE[y+1][x] = t.COLOR;
-  GAMESTATE[y+2][x] = t.COLOR;
- }
-
-}
-
-uint8_t CheckBoundariesAndUpdate(TETRONIM t, const int POSITION_MATRIX[][4][2], const int LEN[2]){
-
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
- uint8_t ReturnValue = 0;
- uint8_t RotationValue = t.ROTATE;
- int i, cx, cy, array_length;
-
-
- for(i=0; i< LEN[t.ROTATE]; i++){
-  cx = x + POSITION_MATRIX[RotationValue][i][0];
-  cy = y + POSITION_MATRIX[RotationValue][i][1];
-  if(cy == 20 || GAMESTATE[cy][cx] != '0'){
-   ReturnValue = 1;
-  }
-}
-
- return ReturnValue;
-}
-
-
-uint8_t CheckAndUpdateState(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- uint8_t ReturnValue = 0;
- int LEN; int LEN_ROT;
-
-
-
-
- switch(t.TETRONIM_TYPE){
-  case 'Z':
-   LEN = 4;
-   ReturnValue = CheckBoundariesAndUpdate(t, Z_SHAPE, Z_LEN);
-   if(ReturnValue == 1){
-    UpdateState_Z(t);
-   }
-   break;
-  case 'I':
-   LEN = 4;
-   ReturnValue = CheckBoundariesAndUpdate(t, I_SHAPE, I_LEN);
-   if(ReturnValue == 1){
-    UpdateState_I(t);
-   }
-   break;
-  case 'O':
-   LEN = 2;
-   ReturnValue = CheckBoundariesAndUpdate(t, O_SHAPE, O_LEN);
-   if(ReturnValue == 1){
-    UpdateState_O(t);
-   }
-   break;
-  case 'T':
-   LEN = 4;
-   ReturnValue = CheckBoundariesAndUpdate(t, T_SHAPE, T_LEN);
-   if(ReturnValue == 1){
-    UpdateState_T(t);
-   }
-   break;
-  case 'J':
-   LEN = 4;
-   ReturnValue = CheckBoundariesAndUpdate(t, J_SHAPE, J_LEN);
-   if(ReturnValue == 1){
-    UpdateState_J(t);
-   }
-   break;
-  case 'L':
-   LEN = 4;
-   ReturnValue = CheckBoundariesAndUpdate(t, L_SHAPE, L_LEN);
-   if(ReturnValue == 1){
-    UpdateState_L(t);
-   }
-   break;
-  case 'S':
-   LEN = 4;
-   ReturnValue = CheckBoundariesAndUpdate(t, S_SHAPE, S_LEN);
-   if(ReturnValue == 1){
-    UpdateState_S(t);
-   }
-   break;
-  default:
-   break;
-
+ enable_timer(1);
+ iterations++;
+ if(iterations > (sizeof(noteDurations) / sizeof(noteDurations[0]))){
+  iterations = 0;
 
  }
 
 
- return ReturnValue;
 
-
-}
-
-
-//DEFINITION OF HORIZONTAL POSITION MATRIX
-
-const int I_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {-1,0}, {-1,0}, {-1,0}}, {{-1,0},{-1,1},{-1,2},{-1,3}}};
-const int I_HORIZONTAL_SHAPE_R[2][4][2] = {{{4,0}, {4,0}, {4,0}, {4,0}}, {{1,0},{1,1},{1,2},{1,3}}};
-const int I_HORIZONTAL_LEN[2] = {1,4};
-
-const int O_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {-1,1}, {-1,0}, {-1,1}},{{-1,0},{-1,1},{-1,0},{-1,1}}};
-const int O_HORIZONTAL_SHAPE_R[2][4][2] = {{{2,0}, {2,1}, {2,0}, {2,1}}, {{2,0}, {2,1}, {2,0}, {2,1}}};
-const int O_HORIZONTAL_LEN[2] = {2,2};
-
-const int T_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {0,1}, {-1,0}, {-1,0}}, {{0,0},{-1,1},{0,2},{0,2}}};
-const int T_HORIZONTAL_SHAPE_R[2][4][2] = {{{3,0}, {2,1}, {3,0}}, {{2,0}, {2,1}, {2,2}}};
-const int T_HORIZONTAL_LEN[2] = {2,3};
-
-const int J_HORIZONTAL_SHAPE_L[2][4][2] = {{{0,0}, {0,1}, {-1,2},{0,0}}, {{-1,0},{-1,1},{-1,0},{-1,0}}};
-const int J_HORIZONTAL_SHAPE_R[2][4][2] = {{{2,0}, {2,1}, {2,2},{2,0}}, {{1,0}, {3,1}, {1,2},{1,0}}};
-const int J_HORIZONTAL_LEN[2] = {3,2};
-
-const int L_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {-1,1}, {-1,2}, {-1,0}}, {{-1,1},{1,0},{-1,1}, {1,0}}};
-const int L_HORIZONTAL_SHAPE_R[2][4][2] = {{{1,0}, {1,1}, {2,2}, {1,0}}, {{3,0}, {3,1}, {3,0}, {3,1}}};
-const int L_HORIZONTAL_LEN[2] = {3,2};
-
-const int S_HORIZONTAL_SHAPE_L[2][4][2] = {{{0,0}, {-1,1}, {0,0}, {-1,1}}, {{-1,0},{-1,1},{0,2}, {-1,0}}};
-const int S_HORIZONTAL_SHAPE_R[2][4][2] = {{{3,0}, {2,1}, {3,0}, {2,1}}, {{1,0}, {2,1}, {2,2}, {2,1}}};
-const int S_HORIZONTAL_LEN[2] = {2,3};
-
-const int Z_HORIZONTAL_SHAPE_L[2][4][2] = {{{-1,0}, {0,1}, {-1,0}, {0,1}}, {{0,0},{-1,1},{-1,2}, {0,0}}};
-const int Z_HORIZONTAL_SHAPE_R[2][4][2] = {{{2,0}, {3,1}, {2,0}, {3,1}}, {{2,0}, {2,1}, {1,2}, {2,0}}};
-const int Z_HORIZONTAL_LEN[2] = {2,3};
-
-uint8_t CheckHorizontalState(TETRONIM t){
- int x = (t.COORD[0] - 10) / 15;
- int y = (t.COORD[1] - 10) / 15;
-
- uint8_t ReturnValue = 0;
-
- switch(t.TETRONIM_TYPE){
-  case 'Z':
-   ReturnValue = CheckBoundariesAndUpdate(t, Z_HORIZONTAL_SHAPE_L, Z_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, Z_HORIZONTAL_SHAPE_R, Z_HORIZONTAL_LEN);
-  }
-   break;
-  case 'I':
-   ReturnValue = CheckBoundariesAndUpdate(t, I_HORIZONTAL_SHAPE_L, I_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, I_HORIZONTAL_SHAPE_R, I_HORIZONTAL_LEN);
-  }
-   break;
-  case 'O':
-   ReturnValue = CheckBoundariesAndUpdate(t, O_HORIZONTAL_SHAPE_L, O_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, O_HORIZONTAL_SHAPE_R, O_HORIZONTAL_LEN);
-  }
-   break;
-  case 'T':
-   ReturnValue = CheckBoundariesAndUpdate(t, T_HORIZONTAL_SHAPE_L, T_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, T_HORIZONTAL_SHAPE_R, T_HORIZONTAL_LEN);
-  }
-   break;
-  case 'J':
-   ReturnValue = CheckBoundariesAndUpdate(t, J_HORIZONTAL_SHAPE_L, J_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, J_HORIZONTAL_SHAPE_R, J_HORIZONTAL_LEN);
-  }
-   break;
-  case 'L':
-   ReturnValue = CheckBoundariesAndUpdate(t, L_HORIZONTAL_SHAPE_L, L_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, L_HORIZONTAL_SHAPE_R, L_HORIZONTAL_LEN);
-  }
-   break;
-  case 'S':
-   ReturnValue = CheckBoundariesAndUpdate(t, S_HORIZONTAL_SHAPE_L, S_HORIZONTAL_LEN);
-  if (ReturnValue == 0) {
-   ReturnValue = CheckBoundariesAndUpdate(t, S_HORIZONTAL_SHAPE_R, S_HORIZONTAL_LEN);
-  }
-  break;
-  default:
-   break;
- }
- return ReturnValue;
 }
