@@ -63,14 +63,16 @@ uint32_t init_RIT ( uint32_t RITInterval )
   LPC_SC->PCLKSEL1  |=  (1<<26);   // RIT Clock = CCLK
 	LPC_SC->PCONP     |=  (1<<16);   // Enable power for RIT
 	
+	LPC_RIT->RICOUNTER = 0;
 	LPC_RIT->RICOMPVAL = RITInterval;      // Set match value		
 	LPC_RIT->RICTRL    = (1<<1) |    // Enable clear on match	
 											 (1<<2) |	 // Enable timer for debug	
 											 (1<<3) ;    // Enable RIT (START TIMER)
-	LPC_RIT->RICOUNTER = 0;          // Set count value to 0
+
 	
 	NVIC_EnableIRQ(RIT_IRQn);
 	NVIC_SetPriority(RIT_IRQn, 0);
+	LPC_RIT->RICOUNTER = 0; 
   return (0);
 }
 

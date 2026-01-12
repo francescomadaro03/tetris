@@ -2009,6 +2009,8 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
 void SpeedUpTimer(uint8_t flag, uint32_t speed);
 void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
+extern uint8_t RandomMalus(uint8_t Highest_Y);
+extern void HandleTimerSpeed(uint8_t PotSpeed);
 # 16 "Source/timer/IRQ_timer.c" 2
 # 1 "./Source\\tetris/frontend.h" 1
 
@@ -2030,7 +2032,7 @@ extern volatile TETRONIM State;
 extern void init_tetris_frontend(void);
 extern void DrawSquare (uint16_t x0, uint16_t y0, uint16_t color);
 extern char* ScoreToString(uint16_t score);
-static uint16_t LFSR_Random32(uint16_t state);
+extern uint16_t LFSR_Random32(uint16_t state);
 extern void DrawTetroid_I(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
 extern void DrawTetroid_O(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
 extern void DrawTetroid_T(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
@@ -2369,7 +2371,7 @@ void playNote(void);
 uint32_t TIMER_SPEED = 0x17D7840;
 uint32_t TIMER_DOUBLE = (0x1312D0 >> 1);
 volatile uint8_t Highest_Y;
-
+extern uint16_t clearedLinesCount;
 
 uint16_t SinTable[45] =
 {
@@ -2383,7 +2385,7 @@ uint16_t SinTable[45] =
 void TIMER0_IRQHandler (void)
 {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->IR = 1;
- static uint8_t collision = 0;
+ static volatile uint8_t collision = 0;
  collision = CheckCollisions(State);
  uint16_t Y = ((State.COORD[1] - 10) / 15);
  if(collision == 1){
@@ -2397,6 +2399,12 @@ void TIMER0_IRQHandler (void)
    ComputePoints(0,1);
    CheckGAMESTATE(Highest_Y);
    collision = 0;
+   if (clearedLinesCount % 10 == 0){
+    uint8_t triggerGameOver = RandomMalus(Highest_Y);
+    if (triggerGameOver == 1){
+     GameOver();
+    }
+   }
    NewTetroid();
   }
 
@@ -2407,7 +2415,7 @@ void TIMER0_IRQHandler (void)
 
   return;
 }
-# 85 "Source/timer/IRQ_timer.c"
+# 91 "Source/timer/IRQ_timer.c"
 void TIMER1_IRQHandler (void)
 {
 

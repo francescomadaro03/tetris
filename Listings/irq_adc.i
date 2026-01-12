@@ -1,425 +1,11 @@
-# 1 "Source/tetris/backend.c"
+# 1 "Source/ADC/IRQ_adc.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 404 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "Source/tetris/backend.c" 2
-# 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 1 3
-# 71 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-    typedef unsigned int size_t;
-# 91 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-    typedef unsigned short wchar_t;
-
-
-
-
-typedef struct div_t { int quot, rem; } div_t;
-
-typedef struct ldiv_t { long int quot, rem; } ldiv_t;
-# 139 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int __aeabi_MB_CUR_MAX(void);
-# 158 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) double atof(const char * ) __attribute__((__nonnull__(1)));
-
-
-
-
-
-extern __attribute__((__nothrow__)) int atoi(const char * ) __attribute__((__nonnull__(1)));
-
-
-
-
-
-extern __attribute__((__nothrow__)) long int atol(const char * ) __attribute__((__nonnull__(1)));
-# 185 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) double strtod(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
-# 212 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) long int strtol(const char * __restrict ,
-                        char ** __restrict , int ) __attribute__((__nonnull__(1)));
-# 243 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) unsigned long int strtoul(const char * __restrict ,
-                                       char ** __restrict , int ) __attribute__((__nonnull__(1)));
-# 275 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) long long strtoll(const char * __restrict ,
-                                  char ** __restrict , int )
-                          __attribute__((__nonnull__(1)));
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) unsigned long long strtoull(const char * __restrict ,
-                                            char ** __restrict , int )
-                                   __attribute__((__nonnull__(1)));
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) int rand(void);
-# 303 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) void srand(unsigned int );
-# 313 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-struct _rand_state { int __x[57]; };
-extern __attribute__((__nothrow__)) int _rand_r(struct _rand_state *);
-extern __attribute__((__nothrow__)) void _srand_r(struct _rand_state *, unsigned int);
-struct _ANSI_rand_state { int __x[1]; };
-extern __attribute__((__nothrow__)) int _ANSI_rand_r(struct _ANSI_rand_state *);
-extern __attribute__((__nothrow__)) void _ANSI_srand_r(struct _ANSI_rand_state *, unsigned int);
-
-
-
-
-
-extern __attribute__((__nothrow__)) void *calloc(size_t , size_t );
-
-
-
-
-
-extern __attribute__((__nothrow__)) void free(void * );
-
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) void *malloc(size_t );
-
-
-
-
-
-extern __attribute__((__nothrow__)) void *realloc(void * , size_t );
-# 374 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-typedef int (*__heapprt)(void *, char const *, ...);
-extern __attribute__((__nothrow__)) void __heapstats(int (* )(void * ,
-                                           char const * , ...),
-                        void * ) __attribute__((__nonnull__(1)));
-# 390 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int __heapvalid(int (* )(void * ,
-                                           char const * , ...),
-                       void * , int ) __attribute__((__nonnull__(1)));
-# 411 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void abort(void);
-# 422 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int atexit(void (* )(void)) __attribute__((__nonnull__(1)));
-# 444 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void exit(int );
-# 460 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void _Exit(int );
-# 471 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) char *getenv(const char * ) __attribute__((__nonnull__(1)));
-# 484 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int system(const char * );
-# 497 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern void *bsearch(const void * , const void * ,
-              size_t , size_t ,
-              int (* )(const void *, const void *)) __attribute__((__nonnull__(1,2,5)));
-# 532 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern void qsort(void * , size_t , size_t ,
-           int (* )(const void *, const void *)) __attribute__((__nonnull__(1,4)));
-# 560 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) __attribute__((__const__)) int abs(int );
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) __attribute__((__const__)) div_t div(int , int );
-# 579 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) __attribute__((__const__)) long int labs(long int );
-# 589 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) __attribute__((__const__)) ldiv_t ldiv(long int , long int );
-# 644 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-typedef struct __sdiv32by16 { long quot, rem; } __sdiv32by16;
-typedef struct __udiv32by16 { unsigned long quot, rem; } __udiv32by16;
-
-typedef struct __sdiv64by32 { long rem, quot; } __sdiv64by32;
-
-__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __sdiv32by16 __rt_sdiv32by16(
-     int ,
-     short int );
-
-
-
-__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __udiv32by16 __rt_udiv32by16(
-     unsigned int ,
-     unsigned short );
-
-
-
-__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __sdiv64by32 __rt_sdiv64by32(
-     int , unsigned int ,
-     int );
-
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) unsigned int __fp_status(unsigned int , unsigned int );
-# 705 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int mblen(const char * , size_t );
-# 720 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int mbtowc(wchar_t * __restrict ,
-                   const char * __restrict , size_t );
-# 739 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) int wctomb(char * , wchar_t );
-# 761 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) size_t mbstowcs(wchar_t * __restrict ,
-                      const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
-# 779 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) size_t wcstombs(char * __restrict ,
-                      const wchar_t * __restrict , size_t ) __attribute__((__nonnull__(2)));
-# 798 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdlib.h" 3
-extern __attribute__((__nothrow__)) void __use_realtime_heap(void);
-extern __attribute__((__nothrow__)) void __use_realtime_division(void);
-extern __attribute__((__nothrow__)) void __use_two_region_memory(void);
-extern __attribute__((__nothrow__)) void __use_no_heap(void);
-extern __attribute__((__nothrow__)) void __use_no_heap_region(void);
-
-extern __attribute__((__nothrow__)) char const *__C_library_version_string(void);
-extern __attribute__((__nothrow__)) int __C_library_version_number(void);
-# 2 "Source/tetris/backend.c" 2
-# 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 1 3
-# 58 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
-                    const void * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) void *memmove(void * ,
-                    const void * , size_t ) __attribute__((__nonnull__(1,2)));
-# 77 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strcpy(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) char *strncpy(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
-# 93 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strcat(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) char *strncat(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
-# 117 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) int memcmp(const void * , const void * , size_t ) __attribute__((__nonnull__(1,2)));
-
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) int strcmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) int strncmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
-# 141 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) int strcasecmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) int strncasecmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
-# 158 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) int strcoll(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-# 169 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) size_t strxfrm(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
-# 193 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) void *memchr(const void * , int , size_t ) __attribute__((__nonnull__(1)));
-# 209 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strchr(const char * , int ) __attribute__((__nonnull__(1)));
-# 218 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) size_t strcspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-# 232 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strpbrk(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-# 247 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strrchr(const char * , int ) __attribute__((__nonnull__(1)));
-# 257 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) size_t strspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-# 270 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strstr(const char * , const char * ) __attribute__((__nonnull__(1,2)));
-# 280 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) char *strtok(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(2)));
-extern __attribute__((__nothrow__)) char *_strtok_r(char * , const char * , char ** ) __attribute__((__nonnull__(2,3)));
-# 321 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) void *memset(void * , int , size_t ) __attribute__((__nonnull__(1)));
-
-
-
-
-
-extern __attribute__((__nothrow__)) char *strerror(int );
-
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) size_t strlen(const char * ) __attribute__((__nonnull__(1)));
-
-
-
-
-
-extern __attribute__((__nothrow__)) size_t strnlen(const char * , size_t ) __attribute__((__nonnull__(1)));
-
-
-
-
-
-
-
-extern __attribute__((__nothrow__)) size_t strlcpy(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
-# 369 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) size_t strlcat(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
-# 395 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
-extern __attribute__((__nothrow__)) void _membitcpybl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitcpybb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitcpyhl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitcpyhb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitcpywl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitcpywb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitmovebl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitmovebb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 3 "Source/tetris/backend.c" 2
-# 1 "Source/tetris\\backend.h" 1
-
-# 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdint.h" 1 3
-# 56 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdint.h" 3
-typedef signed char int8_t;
-typedef signed short int int16_t;
-typedef signed int int32_t;
-typedef signed long long int int64_t;
-
-
-typedef unsigned char uint8_t;
-typedef unsigned short int uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long int uint64_t;
-
-
-
-
-
-typedef signed char int_least8_t;
-typedef signed short int int_least16_t;
-typedef signed int int_least32_t;
-typedef signed long long int int_least64_t;
-
-
-typedef unsigned char uint_least8_t;
-typedef unsigned short int uint_least16_t;
-typedef unsigned int uint_least32_t;
-typedef unsigned long long int uint_least64_t;
-
-
-
-
-typedef signed int int_fast8_t;
-typedef signed int int_fast16_t;
-typedef signed int int_fast32_t;
-typedef signed long long int int_fast64_t;
-
-
-typedef unsigned int uint_fast8_t;
-typedef unsigned int uint_fast16_t;
-typedef unsigned int uint_fast32_t;
-typedef unsigned long long int uint_fast64_t;
-
-
-
-
-
-
-typedef signed int intptr_t;
-typedef unsigned int uintptr_t;
-
-
-
-typedef signed long long intmax_t;
-typedef unsigned long long uintmax_t;
-# 3 "Source/tetris\\backend.h" 2
-
-
-
-extern char GAMESTATE[21][10];
-
-
-
-
- typedef struct {
-  char TETRONIM_TYPE;
-  char COLOR;
-  uint16_t COLOR_CODE;
-  int ROTATE;
-  uint16_t COORD[2];
-  uint16_t FLOOR_COORD[8]; //first two pairs are coordinates of the no rotation, then the rotation
-  uint8_t HORIZONTAL_LENGTH; // number of blocks from upper coordinates
-  uint8_t HORIZONTAL_ROTATE_LENGTH;
-  uint8_t VERTICAL_LENGTH;
-
-
- } TETRONIM;
-# 33 "Source/tetris\\backend.h"
-extern void ConfigurationProcedureTiming(void);
-extern void MovementInit(void);
-extern TETRONIM VerticalMovementHandler(TETRONIM t);
-extern TETRONIM HorizontalMovementHandler(TETRONIM t, char direction);
-extern uint8_t CheckCollisions(TETRONIM State);
-extern TETRONIM RotateCurrentTetronim(TETRONIM t);
-extern uint8_t CheckFullRow(uint8_t row);
-void CheckGAMESTATE(uint8_t row);
-void VoidField(uint8_t row, uint8_t LastIndexFull);
-void RedrawField(uint8_t start, uint8_t LastIndexFull);
-void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
-void SpeedUpTimer(uint8_t flag, uint32_t speed);
-void HardDropTetroid(TETRONIM State);
-extern void Reset_GAMESTATE(void);
-extern uint8_t RandomMalus(uint8_t Highest_Y);
-extern void HandleTimerSpeed(uint8_t PotSpeed);
-# 4 "Source/tetris/backend.c" 2
-# 1 "./Source/timer\\timer.h" 1
-# 15 "./Source/timer\\timer.h"
-extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
-extern void enable_timer( uint8_t timer_num );
-extern void disable_timer( uint8_t timer_num );
-extern void reset_timer( uint8_t timer_num );
-extern void start_timer(void);
-
-extern void TIMER0_IRQHandler (void);
-extern void TIMER1_IRQHandler (void);
-# 5 "Source/tetris/backend.c" 2
+# 1 "Source/ADC/IRQ_adc.c" 2
+# 11 "Source/ADC/IRQ_adc.c"
 # 1 "C:/Users/frama/AppData/Local/Arm/Packs/Keil/LPC1700_DFP/2.7.2/Device/Include\\LPC17xx.h" 1
 # 41 "C:/Users/frama/AppData/Local/Arm/Packs/Keil/LPC1700_DFP/2.7.2/Device/Include\\LPC17xx.h"
 typedef enum IRQn
@@ -476,6 +62,66 @@ typedef enum IRQn
 # 106 "C:/Users/frama/AppData/Local/Arm/Packs/Keil/LPC1700_DFP/2.7.2/Device/Include\\LPC17xx.h"
 # 1 "./Source/CMSIS_core\\core_cm3.h" 1
 # 29 "./Source/CMSIS_core\\core_cm3.h" 3
+
+
+
+
+
+# 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdint.h" 1 3
+# 56 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\stdint.h" 3
+typedef signed char int8_t;
+typedef signed short int int16_t;
+typedef signed int int32_t;
+typedef signed long long int int64_t;
+
+
+typedef unsigned char uint8_t;
+typedef unsigned short int uint16_t;
+typedef unsigned int uint32_t;
+typedef unsigned long long int uint64_t;
+
+
+
+
+
+typedef signed char int_least8_t;
+typedef signed short int int_least16_t;
+typedef signed int int_least32_t;
+typedef signed long long int int_least64_t;
+
+
+typedef unsigned char uint_least8_t;
+typedef unsigned short int uint_least16_t;
+typedef unsigned int uint_least32_t;
+typedef unsigned long long int uint_least64_t;
+
+
+
+
+typedef signed int int_fast8_t;
+typedef signed int int_fast16_t;
+typedef signed int int_fast32_t;
+typedef signed long long int int_fast64_t;
+
+
+typedef unsigned int uint_fast8_t;
+typedef unsigned int uint_fast16_t;
+typedef unsigned int uint_fast32_t;
+typedef unsigned long long int uint_fast64_t;
+
+
+
+
+
+
+typedef signed int intptr_t;
+typedef unsigned int uintptr_t;
+
+
+
+typedef signed long long intmax_t;
+typedef unsigned long long uintmax_t;
+# 35 "./Source/CMSIS_core\\core_cm3.h" 2 3
 # 63 "./Source/CMSIS_core\\core_cm3.h" 3
 # 1 "./Source/CMSIS_core\\cmsis_version.h" 1 3
 # 29 "./Source/CMSIS_core\\cmsis_version.h" 3
@@ -2136,472 +1782,228 @@ typedef struct
        uint32_t RESERVED8;
   volatile uint32_t Module_ID;
 } LPC_EMAC_TypeDef;
-# 6 "Source/tetris/backend.c" 2
-# 1 "Source/tetris\\backend.h" 1
+# 12 "Source/ADC/IRQ_adc.c" 2
+# 1 "Source/ADC\\adc.h" 1
+# 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 1 3
+# 51 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+    typedef unsigned int size_t;
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
+                    const void * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *memmove(void * ,
+                    const void * , size_t ) __attribute__((__nonnull__(1,2)));
+# 77 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcpy(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strncpy(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 93 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcat(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strncat(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 117 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int memcmp(const void * , const void * , size_t ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strcmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strncmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 141 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcasecmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strncasecmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 158 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcoll(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 169 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strxfrm(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 193 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memchr(const void * , int , size_t ) __attribute__((__nonnull__(1)));
+# 209 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 218 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strcspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 232 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strpbrk(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 247 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strrchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 257 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 270 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strstr(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 280 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strtok(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) char *_strtok_r(char * , const char * , char ** ) __attribute__((__nonnull__(2,3)));
+# 321 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memset(void * , int , size_t ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strerror(int );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strlen(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strnlen(const char * , size_t ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strlcpy(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 369 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strlcat(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 395 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void _membitcpybl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpybb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+# 2 "Source/ADC\\adc.h" 2
+
+
+void ADC_init (void);
+void ADC_start_conversion (void);
+
+
+void ADC_IRQHandler(void);
+# 13 "Source/ADC/IRQ_adc.c" 2
+# 1 "./Source\\led/led.h" 1
+# 12 "./Source\\led/led.h"
+void LED_init(void);
+void LED_deinit(void);
+
+
+void LED_On (unsigned int num);
+void LED_Off (unsigned int num);
+void LED_Out(unsigned int value);
+# 14 "Source/ADC/IRQ_adc.c" 2
+# 1 "./Source\\timer/timer.h" 1
+# 15 "./Source\\timer/timer.h"
+extern uint32_t init_timer( uint8_t timer_num, uint32_t timerInterval );
+extern void enable_timer( uint8_t timer_num );
+extern void disable_timer( uint8_t timer_num );
+extern void reset_timer( uint8_t timer_num );
+extern void start_timer(void);
+
+extern void TIMER0_IRQHandler (void);
+extern void TIMER1_IRQHandler (void);
+# 15 "Source/ADC/IRQ_adc.c" 2
+# 1 "./Source\\tetris/backend.h" 1
 
 
 
 
 
 extern char GAMESTATE[21][10];
-# 7 "Source/tetris/backend.c" 2
-# 1 "Source/tetris\\frontend.h" 1
-
-
-# 1 "Source/tetris\\backend.h" 1
 
 
 
 
-
-extern char GAMESTATE[21][10];
-# 4 "Source/tetris\\frontend.h" 2
-
-
-
-
-extern volatile TETRONIM State;
-
-extern void init_tetris_frontend(void);
-extern void DrawSquare (uint16_t x0, uint16_t y0, uint16_t color);
-extern char* ScoreToString(uint16_t score);
-extern uint16_t LFSR_Random32(uint16_t state);
-extern void DrawTetroid_I(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_O(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_T(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_J(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_L(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_S(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern void DrawTetroid_Z(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
-extern char RandomTetroidGenerator(void);
-extern char FindColorFromCode(uint16_t color);
-extern uint16_t Find_Color_From_Type(char typeT);
-TETRONIM TetroidDrawer(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation, char typeT);
-extern void NewTetroid(void);
-extern void ChangeDirection(TETRONIM State, char direction);
-extern uint16_t FindColorCodeFromColor(char color);
-extern void GameOver(void);
-void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim);
-# 8 "Source/tetris/backend.c" 2
-# 1 "./Source/GLCD\\GLCD.h" 1
-# 90 "./Source/GLCD\\GLCD.h"
-void LCD_Initialization(void);
-void LCD_Clear(uint16_t Color);
-uint16_t LCD_GetPoint(uint16_t Xpos,uint16_t Ypos);
-void LCD_SetPoint(uint16_t Xpos,uint16_t Ypos,uint16_t point);
-void LCD_DrawLine( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 , uint16_t color );
-void PutChar( uint16_t Xpos, uint16_t Ypos, uint8_t ASCI, uint16_t charColor, uint16_t bkColor );
-void GUI_Text(uint16_t Xpos, uint16_t Ypos, uint8_t *str,uint16_t Color, uint16_t bkColor);
-void LCD_ClearArea(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t Color);
-# 9 "Source/tetris/backend.c" 2
-# 1 "Source/tetris\\collision_header.h" 1
-# 1 "Source/tetris\\frontend.h" 1
+ typedef struct {
+  char TETRONIM_TYPE;
+  char COLOR;
+  uint16_t COLOR_CODE;
+  int ROTATE;
+  uint16_t COORD[2];
+  uint16_t FLOOR_COORD[8]; //first two pairs are coordinates of the no rotation, then the rotation
+  uint8_t HORIZONTAL_LENGTH; // number of blocks from upper coordinates
+  uint8_t HORIZONTAL_ROTATE_LENGTH;
+  uint8_t VERTICAL_LENGTH;
 
 
-# 1 "Source/tetris\\backend.h" 1
+ } TETRONIM;
+# 33 "./Source\\tetris/backend.h"
+extern void ConfigurationProcedureTiming(void);
+extern void MovementInit(void);
+extern TETRONIM VerticalMovementHandler(TETRONIM t);
+extern TETRONIM HorizontalMovementHandler(TETRONIM t, char direction);
+extern uint8_t CheckCollisions(TETRONIM State);
+extern TETRONIM RotateCurrentTetronim(TETRONIM t);
+extern uint8_t CheckFullRow(uint8_t row);
+void CheckGAMESTATE(uint8_t row);
+void VoidField(uint8_t row, uint8_t LastIndexFull);
+void RedrawField(uint8_t start, uint8_t LastIndexFull);
+void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
+void SpeedUpTimer(uint8_t flag, uint32_t speed);
+void HardDropTetroid(TETRONIM State);
+extern void Reset_GAMESTATE(void);
+extern uint8_t RandomMalus(uint8_t Highest_Y);
+extern void HandleTimerSpeed(uint8_t PotSpeed);
+# 16 "Source/ADC/IRQ_adc.c" 2
 
 
 
 
+unsigned short AD_current;
+unsigned short AD_last = 0xFF;
 
-extern char GAMESTATE[21][10];
-# 4 "Source/tetris\\frontend.h" 2
-# 2 "Source/tetris\\collision_header.h" 2
-# 1 "Source/tetris\\backend.h" 1
+void ADC_IRQHandler(void) {
 
+  AD_current = ((((LPC_ADC_TypeDef *) ((0x40000000UL) + 0x34000) )->ADGDR>>4) & 0xFFF);
+  if(AD_current != AD_last){
+  LED_Off(AD_last*5/0xFFF); // ad_last : AD_max = x : 5
+  LED_On(AD_current*5/0xFFF); // ad_current : AD_max = x : 5
 
-
-
-
-extern char GAMESTATE[21][10];
-# 3 "Source/tetris\\collision_header.h" 2
-
+  HandleTimerSpeed(AD_current*5/0xFFF);
 
 
 
-uint8_t CheckAndUpdateState(TETRONIM t);
-uint8_t CheckBoundariesAndUpdate(TETRONIM t, const int POSITION_MATRIX[][4][2], const int LEN[2]);
-uint8_t CheckHorizontalState(TETRONIM t);
-void UpdateState_I(TETRONIM t);
-
-
-
-
-//MATRIX OF POSITIONS
-
-
-extern const int I_SHAPE[2][4][2];
-extern const int O_SHAPE[2][4][2];
-extern const int T_SHAPE[2][4][2];
-extern const int J_SHAPE[2][4][2];
-extern const int L_SHAPE[2][4][2];
-extern const int S_SHAPE[2][4][2];
-extern const int Z_SHAPE[2][4][2];
-# 10 "Source/tetris/backend.c" 2
-# 23 "Source/tetris/backend.c"
-extern uint16_t InitialState;
-extern uint16_t score;
-extern uint16_t record;
-extern int GameOverFlag;
-extern uint8_t Highest_Y;
-extern uint16_t clearedLinesCount;
-
-
-char GAMESTATE[21][10] = { {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}
-# 53 "Source/tetris/backend.c"
-};
-
-
-void Reset_GAMESTATE(void){
-   memset(GAMESTATE, '0', 21 * 10 * sizeof(char));
-}
-
-
-void ConfigurationProcedureTiming(void){
- uint32_t TimerValue;
- enable_timer(0);
- //now touchpad configuration starts
- TP_Init();
- TouchPanel_Calibrate();
- disable_timer(0); //the timer stops counting as soon as the configuration is done
- TimerValue = ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> TC;
- InitialState = (TimerValue >> 16); //the time spent to configure the system becomes the seed for the random generation of tetroids
-
-
-
-}
-
-void MovementInit(void){
- reset_timer(0);
- init_timer(0, (0x17D7840));
- //init_timer(0, 0x1312D0); //to simulate the tetris in the simulator
- enable_timer(0);
- return;
-}
-
-TETRONIM VerticalMovementHandler(TETRONIM t){
-
-
- TetroidDrawer(t.COORD[0], t.COORD[1], 0x0000, t.ROTATE, t.TETRONIM_TYPE);
- TetroidDrawer(t.COORD[0], t.COORD[1] + 15, t.COLOR_CODE, t.ROTATE, t.TETRONIM_TYPE);
- t.COORD[1] = t.COORD[1] + 15;
-
- //logica per gestire lo stato
-
- return t;
-}
-
-
-TETRONIM HorizontalMovementHandler(TETRONIM t, char direction){
- uint8_t MAPPED_X = (t.COORD[0] - 10) / 15;
- if(direction == 'R'){
-
-  if((t.ROTATE == 0 && MAPPED_X + t.HORIZONTAL_LENGTH < 10) || (t.ROTATE == 1 && MAPPED_X + t.HORIZONTAL_ROTATE_LENGTH < 10)){
-
-   TetroidDrawer(t.COORD[0], t.COORD[1], 0x0000, t.ROTATE, t.TETRONIM_TYPE);
-   TetroidDrawer(t.COORD[0] + 15, t.COORD[1], t.COLOR_CODE, t.ROTATE, t.TETRONIM_TYPE);
-   t.COORD[0] += 15;
+  AD_last = AD_current;
   }
-
- }
-
- else {
-   if(MAPPED_X -1 >= 0) {
-
-    TetroidDrawer(t.COORD[0], t.COORD[1], 0x0000, t.ROTATE, t.TETRONIM_TYPE);
-    TetroidDrawer(t.COORD[0]-15, t.COORD[1], t.COLOR_CODE, t.ROTATE, t.TETRONIM_TYPE);
-    t.COORD[0] = t.COORD[0] - 15;
-
-
-
-   }
-
- }
-
-
-
- return t;
-}
-
-TETRONIM RotateCurrentTetronim(TETRONIM t){
-
- uint8_t MAPPED_X = (t.COORD[0] - 10) / 15;
- if((MAPPED_X + t.HORIZONTAL_ROTATE_LENGTH < 10)){
-  uint8_t RotationValue = !t.ROTATE;
-  TetroidDrawer(t.COORD[0], t.COORD[1], 0x0000, t.ROTATE, t.TETRONIM_TYPE);
-  TetroidDrawer(t.COORD[0], t.COORD[1], t.COLOR_CODE, RotationValue, t.TETRONIM_TYPE);
-
-  t.ROTATE = RotationValue;
- }
-
-
- return t;
-
-
-
-}
-
-uint8_t CheckCollisions(TETRONIM State){
- uint8_t ReturnValue = 0;
- ReturnValue = CheckAndUpdateState(State);
- return ReturnValue;
-
-}
-
-
-
-void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
-
- GUI_Text(170, 25, (uint8_t *) ScoreToString(score), 0x0000, 0x0000);
- GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), 0x0000, 0x0000);
- clearedLinesCount += CanceledRows;
-
-
- //100 per riga, 10 per piazzamento, 600 se ho tetris
- if(SingleTetronim == 0){
-  if(CanceledRows != 4){
-  score += (CanceledRows*100);
-  }
-  else {
-   score += 600;
-  }
-
- }
- else {
-  score += 10;
- }
-
- GUI_Text(170, 25, (uint8_t *) ScoreToString(score), 0xFFFF, 0x0000);
- GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), 0xFFFF, 0x0000);
-
-
-}
-# 188 "Source/tetris/backend.c"
-//this function will handle the checks and possible
-//function calls to the logic to change the field
-//if some rows are full. the function will
-//return 0 if no collisions are found
-uint8_t CheckFullRow(uint8_t row){
- char *p = &GAMESTATE[row][0];
- uint8_t i;
-
-
- for(i = 0; i<10; i++, p++){
-  if(*p == '0'){
-   return 0;
-
-  }
-
-
- }
-
- return 1;
-}
-
-void DrawFieldLine(uint8_t row){
- volatile uint16_t OnScreenX;
- volatile uint16_t OnScreenY = (row*15) + 10;
- volatile char color;
- volatile uint16_t i, color_code;
- volatile char color_string;
-
- for(i = 0; i<10; i++){
-  OnScreenX = (i*15) + 10;
-  DrawSquare(OnScreenX, OnScreenY, 0x0000);
-  color_string = GAMESTATE[row][i];
-  color_code = FindColorCodeFromColor(color_string);
-  DrawSquare(OnScreenX, OnScreenY, color_code);
- }
-
-}
-
-
-void CheckGAMESTATE(uint8_t row){
- volatile int8_t NotFullBefore = 0;
- volatile int8_t FullRows = 0;
- volatile int8_t FlagValue;
- volatile int8_t ChangeState = 0; //this variable monitors if the program has detected empty lines after full lines
- volatile int8_t FirstIndexFull = 30;
- volatile int8_t LastIndexFull = 30;
- volatile uint8_t i;
-
- for(i = row; i<20; i++){
-  FlagValue = CheckFullRow(i);
-  if(FlagValue == 1 && ChangeState == 0){
-   FirstIndexFull = i;
-   FullRows++;
-   ChangeState = 1;
-  }
-  else if(FlagValue == 1 && ChangeState == 1){
-   FullRows++;
-  }
-  else if(FlagValue == 0 && ChangeState == 1){
-   LastIndexFull = i-1;
-   break;
-  }
-  else{
-   NotFullBefore++;
-  }
- }
-
- if(ChangeState == 1 && LastIndexFull == 30){
-    LastIndexFull = i - 1;
- }
-
-
-
- if(FirstIndexFull != 30){
-  UpdateGAMESTATE(row,FirstIndexFull,LastIndexFull);
-
- }
-}
-
-void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull){
- volatile int8_t FullRows = LastIndexFull - FirstIndexFull + 1; //this variable takes all rows that are not full before the first one
- volatile int8_t i;
-
- for(i = FirstIndexFull-1; i>=row; i--){
-  memmove(GAMESTATE[i + FullRows], GAMESTATE[i], 10);
- }
-
- i = row;
-
- for(; i< (row+FullRows); i++){
-  memset(GAMESTATE[i], '0', 10);
- }
-
- i = row;
-
- for(; i<=LastIndexFull; i++){
-  DrawFieldLine(i);
- }
-
- ComputePoints(FullRows, 0);
-
-
-
-
-}
-
-
-
-
-
-void HardDropTetroid(TETRONIM State){
- disable_timer(0);
- uint8_t CollisionFlag = 0;
- uint8_t row;
- while(CollisionFlag == 0){
-  State = VerticalMovementHandler(State);
-  CollisionFlag = CheckCollisions(State);
-  if(CollisionFlag == 1){
-   row = (State.COORD[1] - 10) / 15;
-   if(Highest_Y - State.VERTICAL_LENGTH < 0){
-    GameOver();
-
-   }
-   else {
-   if(row < Highest_Y){
-    Highest_Y = row;
-   }
-
-   CheckGAMESTATE(Highest_Y);
-   ComputePoints(0,1);
-
-   }
-
-
-  }
-
- }
- NewTetroid();
-
-}
-
-
-void swap(uint8_t *a, uint8_t *b){
- uint8_t temp = *a;
- *a = *b;
- *b = temp;
-}
-
-uint8_t * ArrayRandomifier(void){
- static uint8_t BASE_ARRAY[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
- uint16_t BASE_STATE = InitialState; uint16_t State;
- uint8_t i, index;
- for(i = 9; i > 2; i--){
-  BASE_STATE = LFSR_Random32(BASE_STATE);
-  index = BASE_STATE % (i+1);
-  swap(&BASE_ARRAY[i], &BASE_ARRAY[index]);
-
- }
-
-
- return &BASE_ARRAY[0];
-
-}
-
-uint8_t AddLastLine(uint8_t * LAST_ROW, uint8_t Highest_Y){
- if((Highest_Y - 1) < 0){
-  return 1; //nothing is done: the function ends here, gameover state will be triggered
- }
- uint8_t i;
- for(i = Highest_Y - 1; i<20; i++){
-  memmove(
-   GAMESTATE[i-1],
-   GAMESTATE[i],
-   10*sizeof(char)
-   );
- }
- memset(GAMESTATE[19], '0', 10*sizeof(char));
- //memcpy(GAMESTATE[19], LAST_ROW, 10*sizeof(char));
- return 0;
-}
-
-
-uint8_t RandomMalus(uint8_t Highest_Y){
- uint8_t * MalusRowPositions = ArrayRandomifier();
- uint8_t LAST_ROW[10] = {'0'};
- uint8_t i, triggerGameOverState;
-
- for(i = 9; i>2; i--){
-  LAST_ROW[*MalusRowPositions] = 'm';
-  MalusRowPositions++;
- }
-
- triggerGameOverState = AddLastLine(LAST_ROW, Highest_Y);
- if(triggerGameOverState == 1){
-  DrawFieldLine(Highest_Y);
- }
-
- if(triggerGameOverState == 0){
-  DrawFieldLine(Highest_Y);
- }
- return triggerGameOverState;
-
-
-
-}
-
-
-
-
-
-void HandleTimerSpeed(uint8_t PotSpeed){
-
- if(PotSpeed == 0) {
-  PotSpeed = 1;
- }
-
- if(PotSpeed > 5){
-  PotSpeed = 5;
- }
-
- uint32_t BaseSpeed = 0x17D7840;
- disable_timer(0);
- ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> TC = 0;
- ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0 = BaseSpeed/PotSpeed;
- enable_timer(0);
-
-
 }

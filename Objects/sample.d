@@ -5,4 +5,4 @@
   Source\GLCD\GLCD.h Source\TouchPanel\TouchPanel.h Source\timer\timer.h \
   Source\tetris\frontend.h Source\tetris\backend.h Source\RIT\RIT.h \
   Source\joystick\joystick.h Source\button_EXINT\button.h \
-  Source\music\music.h
+  Source\music\music.h Source\ADC\adc.h

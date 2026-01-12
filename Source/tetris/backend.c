@@ -286,6 +286,8 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull){
 	
 	ComputePoints(FullRows, 0);
 	
+
+	
 	
 }
 
@@ -321,5 +323,93 @@ void HardDropTetroid(TETRONIM State){
 	
 	}
 	NewTetroid();
+
+}
+
+
+void swap(uint8_t *a, uint8_t *b){
+	uint8_t temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+uint8_t * ArrayRandomifier(void){
+	static uint8_t BASE_ARRAY[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+	uint16_t BASE_STATE = InitialState; uint16_t State;
+	uint8_t i, index;
+	for(i = 9; i > 2; i--){
+		BASE_STATE = LFSR_Random32(BASE_STATE);
+		index = BASE_STATE % (i+1);
+		swap(&BASE_ARRAY[i], &BASE_ARRAY[index]);
+	
+	}
+	
+	
+	return &BASE_ARRAY[0];
+
+}
+
+uint8_t AddLastLine(uint8_t * LAST_ROW, uint8_t Highest_Y){
+	if((Highest_Y - 1) < 0){
+		return 1; //nothing is done: the function ends here, gameover state will be triggered
+	}
+	uint8_t i;
+	for(i = Highest_Y - 1; i<20; i++){
+		memmove(
+			GAMESTATE[i-1],
+			GAMESTATE[i],
+			10*sizeof(char)
+			);
+	}
+	memset(GAMESTATE[19], '0', 10*sizeof(char));
+	//memcpy(GAMESTATE[19], LAST_ROW, 10*sizeof(char));
+	return 0;
+}
+
+
+uint8_t RandomMalus(uint8_t Highest_Y){
+	uint8_t * MalusRowPositions = ArrayRandomifier();
+	uint8_t LAST_ROW[10] = {'0'};
+	uint8_t i, triggerGameOverState;
+	
+	for(i = 9; i>2; i--){
+		LAST_ROW[*MalusRowPositions] = 'm';
+		MalusRowPositions++;
+	}
+	
+	triggerGameOverState = AddLastLine(LAST_ROW, Highest_Y);
+	if(triggerGameOverState == 1){
+		DrawFieldLine(Highest_Y);
+	}
+	
+	if(triggerGameOverState == 0){
+		DrawFieldLine(Highest_Y);
+	}
+	return triggerGameOverState;
+	
+	
+
+}
+
+/*==================================================================================
+Here we will handle the logic to speed up the game
+===================================================================================*/
+
+void HandleTimerSpeed(uint8_t PotSpeed){
+	
+	if(PotSpeed == 0) {
+		PotSpeed = 1;
+	}
+	
+	if(PotSpeed > 5){
+		PotSpeed = 5;
+	}
+	
+	uint32_t BaseSpeed = 0x17D7840;
+	disable_timer(0);
+	LPC_TIM0 -> TC = 0;
+	LPC_TIM0 -> MR0 = BaseSpeed/PotSpeed;
+	enable_timer(0);
+	
 
 }

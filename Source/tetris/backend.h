@@ -44,4 +44,6 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
 void SpeedUpTimer(uint8_t flag, uint32_t speed);
 void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
+extern uint8_t RandomMalus(uint8_t Highest_Y);
+extern void HandleTimerSpeed(uint8_t PotSpeed);
 #endif

@@ -19,7 +19,7 @@ extern uint8_t starting_game;
 
 
 
-static uint16_t LFSR_Random32(uint16_t state){
+uint16_t LFSR_Random32(uint16_t state){
 	uint16_t feedback =  ((state >> 7) ^ (state >> 4) ^ (state >> 3) ^ (state >> 11)) & 0x01;
 	uint16_t new_state = ((state >> 1)) | (feedback << 15);
 	
@@ -71,7 +71,7 @@ char* ScoreToString(uint16_t score){
 
 
 void init_tetris_frontend(void) {
-	clearedLinesCount = 0;
+	clearedLinesCount = 9;
 	
 	
 	
@@ -407,6 +407,8 @@ uint16_t FindColorCodeFromColor(char color){
 			case 'Y':
 				ReturnCode = 0xFFE0;
 				break;
+			case 'm':
+				ReturnCode = 0x8010; //MALUS color
 			default:
 				break;
 		}
@@ -515,7 +517,7 @@ void NewTetroid(void) {
 	uint16_t color_code;
 	typeT = RandomTetroidGenerator();
 	color_code = Find_Color_From_Type(typeT);
-	State = TetroidDrawer(55, 10, color_code, 0, typeT);
+	State = TetroidDrawer(55, 10, color_code, 0, 'I');
 	MovementInit();	
 	
 	return;

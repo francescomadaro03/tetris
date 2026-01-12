@@ -101,6 +101,8 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
 void SpeedUpTimer(uint8_t flag, uint32_t speed);
 void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
+extern uint8_t RandomMalus(uint8_t Highest_Y);
+extern void HandleTimerSpeed(uint8_t PotSpeed);
 # 4 "Source/tetris\\frontend.h" 2
 
 
@@ -111,7 +113,7 @@ extern volatile TETRONIM State;
 extern void init_tetris_frontend(void);
 extern void DrawSquare (uint16_t x0, uint16_t y0, uint16_t color);
 extern char* ScoreToString(uint16_t score);
-static uint16_t LFSR_Random32(uint16_t state);
+extern uint16_t LFSR_Random32(uint16_t state);
 extern void DrawTetroid_I(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
 extern void DrawTetroid_O(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
 extern void DrawTetroid_T(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);

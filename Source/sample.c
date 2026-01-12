@@ -31,6 +31,7 @@
 #include "joystick/joystick.h"
 #include "button.h"
 #include "music/music.h"
+#include "ADC/adc.h"
 
 
 
@@ -49,14 +50,16 @@ int main(void)
 {
 	
   SystemInit();
+	
 	Highest_Y = 19;
 	GameOverFlag = 0;
 	init_RIT(0x1312D0 << 2);  //UPDATE TIMER TO COMPLY WITH LANDTIGER
 
 	joystick_init();
   LCD_Initialization();
+	ADC_init();
 
-	ConfigurationProcedureTiming();
+	//ConfigurationProcedureTiming();
 	/*enable_timer(1);
 	init_timer(1, 0x1312D0);
 	enable_timer(1);*/
@@ -68,7 +71,7 @@ int main(void)
 	LPC_PINCON->PINSEL1 &= ~(1<<20);			/* pin 0.26 is AOUT */
 	LPC_GPIO0->FIODIR |= (1<<26);					
 	
-	InitControllingTimer();
+	//InitControllingTimer();
 	
 	
 	

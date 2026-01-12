@@ -14,7 +14,7 @@
 #include "/GLCD/GLCD.h"
 #include "tetris/backend.h"
 #include "tetris/frontend.h"
-
+#include "ADC/adc.h"
 
 /******************************************************************************
 ** Function name:		RIT_IRQHandler
@@ -37,6 +37,8 @@ void RIT_IRQHandler (void)
 {	
 
 	LPC_RIT->RICTRL |= 0x1;	/* clear interrupt flag */
+	
+	ADC_start_conversion();
 
 
 	/*

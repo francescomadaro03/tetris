@@ -1819,13 +1819,15 @@ uint32_t init_RIT ( uint32_t RITInterval )
   ((LPC_SC_TypeDef *) ((0x40080000UL) + 0x7C000) )->PCLKSEL1 |= (1<<26); // RIT Clock = CCLK
  ((LPC_SC_TypeDef *) ((0x40080000UL) + 0x7C000) )->PCONP |= (1<<16); // Enable power for RIT
 
+ ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICOUNTER = 0;
  ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICOMPVAL = RITInterval; // Set match value
  ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICTRL = (1<<1) | // Enable clear on match
             (1<<2) | // Enable timer for debug
             (1<<3) ; // Enable RIT (START TIMER)
- ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICOUNTER = 0; // Set count value to 0
+
 
  __NVIC_EnableIRQ(RIT_IRQn);
  __NVIC_SetPriority(RIT_IRQn, 0);
+ ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICOUNTER = 0;
   return (0);
 }

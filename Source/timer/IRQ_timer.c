@@ -21,7 +21,7 @@
 uint32_t TIMER_SPEED = 0x17D7840;
 uint32_t TIMER_DOUBLE = (0x1312D0 >> 1);
 volatile uint8_t Highest_Y;
-
+extern uint16_t clearedLinesCount;
 
 uint16_t SinTable[45] =                                       
 {
@@ -48,7 +48,7 @@ uint16_t SinTable[45] =
 void TIMER0_IRQHandler (void)
 {
 	LPC_TIM0->IR = 1;			/* clear interrupt flag */
-	static uint8_t collision = 0;
+	static volatile uint8_t collision = 0;
 	collision = CheckCollisions(State);
 	uint16_t Y = ((State.COORD[1] - 10) / 15);
 	if(collision == 1){
@@ -62,6 +62,12 @@ void TIMER0_IRQHandler (void)
 			ComputePoints(0,1);
 			CheckGAMESTATE(Highest_Y);
 			collision = 0;
+			if (clearedLinesCount % 10 == 0){
+				uint8_t triggerGameOver = RandomMalus(Highest_Y);
+				if (triggerGameOver == 1){
+					GameOver();
+				}
+			}
 			NewTetroid();
 		}
 

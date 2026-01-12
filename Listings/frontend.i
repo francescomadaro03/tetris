@@ -286,6 +286,8 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull);
 void SpeedUpTimer(uint8_t flag, uint32_t speed);
 void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
+extern uint8_t RandomMalus(uint8_t Highest_Y);
+extern void HandleTimerSpeed(uint8_t PotSpeed);
 # 4 "Source/tetris\\frontend.h" 2
 
 
@@ -296,7 +298,7 @@ extern volatile TETRONIM State;
 extern void init_tetris_frontend(void);
 extern void DrawSquare (uint16_t x0, uint16_t y0, uint16_t color);
 extern char* ScoreToString(uint16_t score);
-static uint16_t LFSR_Random32(uint16_t state);
+extern uint16_t LFSR_Random32(uint16_t state);
 extern void DrawTetroid_I(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
 extern void DrawTetroid_O(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
 extern void DrawTetroid_T(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation);
@@ -2077,7 +2079,7 @@ extern uint8_t starting_game;
 
 
 
-static uint16_t LFSR_Random32(uint16_t state){
+uint16_t LFSR_Random32(uint16_t state){
  uint16_t feedback = ((state >> 7) ^ (state >> 4) ^ (state >> 3) ^ (state >> 11)) & 0x01;
  uint16_t new_state = ((state >> 1)) | (feedback << 15);
 
@@ -2129,7 +2131,7 @@ char* ScoreToString(uint16_t score){
 
 
 void init_tetris_frontend(void) {
- clearedLinesCount = 0;
+ clearedLinesCount = 9;
 
 
 
@@ -2465,6 +2467,8 @@ uint16_t FindColorCodeFromColor(char color){
    case 'Y':
     ReturnCode = 0xFFE0;
     break;
+   case 'm':
+    ReturnCode = 0x8010; //MALUS color
    default:
     break;
   }
@@ -2573,7 +2577,7 @@ void NewTetroid(void) {
  uint16_t color_code;
  typeT = RandomTetroidGenerator();
  color_code = Find_Color_From_Type(typeT);
- State = TetroidDrawer(55, 10, color_code, 0, typeT);
+ State = TetroidDrawer(55, 10, color_code, 0, 'I');
  MovementInit();
 
  return;
