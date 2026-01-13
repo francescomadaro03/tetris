@@ -1918,6 +1918,8 @@ extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , i
 
 void ADC_init (void);
 void ADC_start_conversion (void);
+void ADC_enable(void);
+void ADC_disable(void);
 
 
 void ADC_IRQHandler(void);
@@ -1943,4 +1945,13 @@ void ADC_init (void) {
 
 void ADC_start_conversion (void) {
  ((LPC_ADC_TypeDef *) ((0x40000000UL) + 0x34000) )->ADCR |= (1<<24);
+}
+
+void ADC_enable(void){
+ ((LPC_ADC_TypeDef *) ((0x40000000UL) + 0x34000) )->ADCR |= (1<<21);
+
+}
+
+void ADC_disable(void) {
+ ((LPC_ADC_TypeDef *) ((0x40000000UL) + 0x34000) )->ADCR &= ~(1<<21);
 }

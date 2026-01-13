@@ -25,28 +25,13 @@ int melody[] = {
 };
 
 uint8_t noteDurations[] = {
-    // Battuta 1: Tam(4), ti(2)-ti(2), Tam(4), ti(2)-ti(2)
     4, 2, 2, 4, 2, 2,
-
-    // Battuta 2: Tam(4), ti(2)-ti(2), Tam(4), ti(2)-ti(2)
     4, 2, 2, 4, 2, 2,
-
-    // Battuta 3: Tam(4), ti(2)-ti(2), Tam(4), Tam(4)
     4, 2, 2, 4, 4,
-
-    // Battuta 4: Tam(4), Tam(4), Taaaaam(8 - nota+pausa)
     4, 4, 8,
-
-    // Battuta 5: Taaam(6 - puntata), ti(2), Tam(4), ti(2)-ti(2)
     6, 2, 4, 2, 2,
-
-    // Battuta 6: Taaam(6 - puntata), ti(2), Tam(4), ti(2)-ti(2)
     6, 2, 4, 2, 2,
-
-    // Battuta 7: Tam(4), ti(2)-ti(2), Tam(4), Tam(4)
     4, 2, 2, 4, 4,
-
-    // Battuta 8: Tam(4), Tam(4), Taaaaam(8 - nota+pausa)
     4, 4, 8
 };
 

@@ -28,6 +28,8 @@
 
 volatile int down=0;
 extern uint8_t GameOverFlag;
+extern uint32_t CurrentSpeed;
+extern uint32_t DoubleSpeed;
 volatile uint8_t starting_game = 1;
 volatile int game_paused = 1;
 
@@ -52,6 +54,7 @@ void RIT_IRQHandler (void)
 	volatile uint32_t DoubleSpeed = CurrentSpeed >> 1;
 	volatile int KEY1_PIN_VAL = (LPC_GPIO2->FIOPIN & (1 << 11));
 	volatile uint8_t HorizontalFlag;
+	volatile uint32_t TimerSpeed = LPC_TIM0 -> MR0;
 
 		
 	if(KEY1_PIN_VAL == 0){
@@ -148,22 +151,31 @@ void RIT_IRQHandler (void)
 	}
 	
 	if((LPC_GPIO1->FIOPIN & (1<<26)) == 0){
-		if((LPC_TIM0 -> MR0) != DoubleSpeed){
-			disable_timer(0);
-			LPC_TIM0->MR0 = DoubleSpeed; 
-			LPC_TIM0->TC = 0; 
 
-			enable_timer(0);
-		} 
-	}
-	else {
-		if ((LPC_TIM0->MR0) == DoubleSpeed) {
+
+		ADC_disable();
+		if(TimerSpeed == CurrentSpeed){
 			disable_timer(0);
-			LPC_TIM0->MR0 = CurrentSpeed;
-			LPC_TIM0->TC = 0;
+			LPC_TIM0 -> TC = 0;
+			LPC_TIM0 -> MR0 = DoubleSpeed;
 			enable_timer(0);
+		
+		}
+		
+
+		
 	}
-}
+	else{
+		if(TimerSpeed == DoubleSpeed){
+			disable_timer(0);
+			LPC_TIM0 -> TC = 0;
+			LPC_TIM0 -> MR0 = CurrentSpeed;
+			enable_timer(0);
+		}
+		ADC_enable();
+	
+	}
+	
 
 	
 }

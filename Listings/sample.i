@@ -2080,6 +2080,8 @@ extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , i
 
 void ADC_init (void);
 void ADC_start_conversion (void);
+void ADC_enable(void);
+void ADC_disable(void);
 
 
 void ADC_IRQHandler(void);
@@ -2088,7 +2090,7 @@ void ADC_IRQHandler(void);
 
 
 
-extern uint8_t ScaleFlag; // <- ScaleFlag needs to visible in order for the emulator to find the symbol (can be placed also inside system_LPC17xx.h but since it is RO, it needs more work)
+
 
 
 
@@ -2096,13 +2098,16 @@ volatile TETRONIM State;
 extern volatile uint8_t Highest_Y;
 extern volatile uint8_t GameOverFlag;
 volatile uint8_t StartingGame = 1;
+volatile uint32_t CurrentSpeed;
+volatile uint32_t DoubleSpeed;
 
 
 int main(void)
 {
 
   SystemInit();
-
+ CurrentSpeed = 0x17D7840;
+ DoubleSpeed = CurrentSpeed >> 1;
  Highest_Y = 19;
  GameOverFlag = 0;
  init_RIT(0x1312D0 << 2); //UPDATE TIMER TO COMPLY WITH LANDTIGER
@@ -2111,7 +2116,7 @@ int main(void)
   LCD_Initialization();
  ADC_init();
 
- //ConfigurationProcedureTiming();
+ ConfigurationProcedureTiming();
 
 
 

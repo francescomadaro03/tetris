@@ -2246,9 +2246,12 @@ extern int GameOverFlag;
 extern uint8_t Highest_Y;
 extern uint16_t clearedLinesCount;
 
+extern uint32_t CurrentSpeed;
+extern uint32_t DoubleSpeed;
+
 
 char GAMESTATE[21][10] = { {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}
-# 53 "Source/tetris/backend.c"
+# 56 "Source/tetris/backend.c"
 };
 
 
@@ -2273,9 +2276,10 @@ void ConfigurationProcedureTiming(void){
 
 void MovementInit(void){
  reset_timer(0);
- init_timer(0, (0x17D7840));
+ init_timer(0, CurrentSpeed);
  //init_timer(0, 0x1312D0); //to simulate the tetris in the simulator
  enable_timer(0);
+
  return;
 }
 
@@ -2376,7 +2380,7 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
 
 
 }
-# 188 "Source/tetris/backend.c"
+# 192 "Source/tetris/backend.c"
 //this function will handle the checks and possible
 //function calls to the logic to change the field
 //if some rows are full. the function will
@@ -2602,6 +2606,9 @@ void HandleTimerSpeed(uint8_t PotSpeed){
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> TC = 0;
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0 = BaseSpeed/PotSpeed;
  enable_timer(0);
+
+ CurrentSpeed = BaseSpeed/PotSpeed;
+ DoubleSpeed = CurrentSpeed >> 1;
 
 
 }

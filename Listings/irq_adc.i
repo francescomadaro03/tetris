@@ -1919,6 +1919,8 @@ extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , i
 
 void ADC_init (void);
 void ADC_start_conversion (void);
+void ADC_enable(void);
+void ADC_disable(void);
 
 
 void ADC_IRQHandler(void);

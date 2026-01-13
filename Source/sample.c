@@ -44,13 +44,16 @@ volatile TETRONIM State;
 extern volatile uint8_t Highest_Y;
 extern volatile uint8_t GameOverFlag;
 volatile uint8_t StartingGame = 1;
+volatile uint32_t CurrentSpeed;
+volatile uint32_t DoubleSpeed;
 
 
 int main(void)
 {
 	
   SystemInit();
-	
+	CurrentSpeed = 0x17D7840;
+	DoubleSpeed = CurrentSpeed >> 1;
 	Highest_Y = 19;
 	GameOverFlag = 0;
 	init_RIT(0x1312D0 << 2);  //UPDATE TIMER TO COMPLY WITH LANDTIGER
@@ -59,7 +62,7 @@ int main(void)
   LCD_Initialization();
 	ADC_init();
 
-	//ConfigurationProcedureTiming();
+	ConfigurationProcedureTiming();
 	/*enable_timer(1);
 	init_timer(1, 0x1312D0);
 	enable_timer(1);*/

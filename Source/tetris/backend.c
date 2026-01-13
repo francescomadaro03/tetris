@@ -27,6 +27,9 @@ extern int GameOverFlag;
 extern uint8_t Highest_Y;
 extern uint16_t clearedLinesCount;
 
+extern uint32_t CurrentSpeed;
+extern uint32_t DoubleSpeed;
+
 
 char GAMESTATE[ROWS][COLS] = { \
     {'0','0','0','0','0','0','0','0','0','0'}, \
@@ -74,9 +77,10 @@ void ConfigurationProcedureTiming(void){
 
 void MovementInit(void){
 	reset_timer(0);
-	init_timer(0, (0x17D7840));
+	init_timer(0, CurrentSpeed);
 	//init_timer(0, 0x1312D0); //to simulate the tetris in the simulator
 	enable_timer(0);
+
 	return;
 }
 
@@ -410,6 +414,9 @@ void HandleTimerSpeed(uint8_t PotSpeed){
 	LPC_TIM0 -> TC = 0;
 	LPC_TIM0 -> MR0 = BaseSpeed/PotSpeed;
 	enable_timer(0);
+	
+	CurrentSpeed = BaseSpeed/PotSpeed;
+	DoubleSpeed = CurrentSpeed >> 1;
 	
 
 }

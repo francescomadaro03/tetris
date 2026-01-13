@@ -2040,6 +2040,8 @@ extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , i
 
 void ADC_init (void);
 void ADC_start_conversion (void);
+void ADC_enable(void);
+void ADC_disable(void);
 
 
 void ADC_IRQHandler(void);
@@ -2047,6 +2049,8 @@ void ADC_IRQHandler(void);
 # 29 "Source/RIT/IRQ_RIT.c"
 volatile int down=0;
 extern uint8_t GameOverFlag;
+extern uint32_t CurrentSpeed;
+extern uint32_t DoubleSpeed;
 volatile uint8_t starting_game = 1;
 volatile int game_paused = 1;
 
@@ -2058,12 +2062,13 @@ void RIT_IRQHandler (void)
  ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICTRL |= 0x1;
 
  ADC_start_conversion();
-# 50 "Source/RIT/IRQ_RIT.c"
+# 52 "Source/RIT/IRQ_RIT.c"
  static volatile int key1_pressed = 0;
  volatile uint32_t CurrentSpeed = 0x17D7840;
  volatile uint32_t DoubleSpeed = CurrentSpeed >> 1;
  volatile int KEY1_PIN_VAL = (((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00040) )->FIOPIN & (1 << 11));
  volatile uint8_t HorizontalFlag;
+ volatile uint32_t TimerSpeed = ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0;
 
 
  if(KEY1_PIN_VAL == 0){
@@ -2160,22 +2165,31 @@ void RIT_IRQHandler (void)
  }
 
  if((((LPC_GPIO_TypeDef *) ((0x2009C000UL) + 0x00020) )->FIOPIN & (1<<26)) == 0){
-  if((((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0) != DoubleSpeed){
-   disable_timer(0);
-   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0 = DoubleSpeed;
-   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TC = 0;
 
+
+  ADC_disable();
+  if(TimerSpeed == CurrentSpeed){
+   disable_timer(0);
+   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> TC = 0;
+   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0 = DoubleSpeed;
+   enable_timer(0);
+
+  }
+
+
+
+ }
+ else{
+  if(TimerSpeed == DoubleSpeed){
+   disable_timer(0);
+   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> TC = 0;
+   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0 = CurrentSpeed;
    enable_timer(0);
   }
+  ADC_enable();
+
  }
- else {
-  if ((((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0) == DoubleSpeed) {
-   disable_timer(0);
-   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->MR0 = CurrentSpeed;
-   ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->TC = 0;
-   enable_timer(0);
- }
-}
+
 
 
 }
