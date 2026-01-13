@@ -71,7 +71,7 @@ char* ScoreToString(uint16_t score){
 
 
 void init_tetris_frontend(void) {
-	clearedLinesCount = 9;
+	clearedLinesCount = 0;
 	
 	
 	
@@ -369,7 +369,7 @@ TETRONIM TetroidDrawer(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotatio
 	
 	}
 	char str[2];
-
+	T.SPECIAL_BLOCK = 'N';
 	return T;
 	
 }
@@ -526,3 +526,29 @@ void NewTetroid(void) {
 }
 
 
+TETRONIM SpecialBlockDefinition(void){
+	uint8_t SpecialBlockDecision = InitialState % 2;
+	//if SpecialBlockDecision is 1, Speed is generated, otherwise 
+	//cleared half lines is defined
+	
+	TETRONIM S;
+	
+	switch(SpecialBlockDecision){
+		case 0:
+			S.COLOR = FindColorFromCode(Magenta);
+			S.COLOR_CODE = Magenta;
+			S.SPECIAL_BLOCK = 'S';
+			break;
+		case 1:
+			S.COLOR = FindColorFromCode(Grey);
+			S.COLOR_CODE = Grey;
+			S.SPECIAL_BLOCK = 'C';
+			break;
+		
+	
+	}
+	
+	return S;
+
+
+}

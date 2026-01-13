@@ -27,5 +27,6 @@ extern void ChangeDirection(TETRONIM State, char direction);
 extern uint16_t FindColorCodeFromColor(char color);
 extern void GameOver(void);
 void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim);
+extern TETRONIM SpecialBlockDefinition(void);
 
 #endif

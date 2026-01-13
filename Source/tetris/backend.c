@@ -180,7 +180,7 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
 	GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), White, Black);
 	
 	if(clearedLinesCount % 5 == 0 && SingleTetronim == 0){
-	
+		PowerUpsManagement();
 	}
 	
 	if (clearedLinesCount % 10 == 0 && SingleTetronim == 0){
@@ -205,6 +205,8 @@ HERE STARTS THE LOGIC TO HANDLE THE GAME WIN CONDITIONS
 //if some rows are full. the function will 
 //return 0 if no collisions are found
 uint8_t CheckFullRow(uint8_t row){
+	
+	
 	char *p = &GAMESTATE[row][0];
 	uint8_t i;
 
@@ -433,6 +435,40 @@ void HandleTimerSpeed(uint8_t PotSpeed){
 	
 
 }
+
+
+
+void PowerUpsManagement(void){
+	TETRONIM SpecialBlock = SpecialBlockDefinition();
+	uint16_t RandomState = InitialState;
+	uint16_t NextState = LFSR_Random32(RandomState);
+	
+	//per prendere le righe occupate faccio 20 - Highest_Y per trovare il valore di righe. poi sommo quel valore a Highest_y per avere la riga giusta
+	
+	uint8_t OccupiedRows = 20 - Highest_Y;
+	uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+	NextState = LFSR_Random32(NextState);
+	uint8_t GameStateCol = NextState % 10;
+	
+	while(GAMESTATE[GameStateRow][GameStateCol] == '0'){
+		uint16_t NextState = LFSR_Random32(RandomState);
+		uint8_t OccupiedRows = 20 - Highest_Y;
+		uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+		NextState = LFSR_Random32(NextState);
+		uint8_t GameStateCol = NextState % 10;		
+	}
+	
+	GAMESTATE[GameStateRow][GameStateCol] = SpecialBlock.SPECIAL_BLOCK;
+	uint16_t Mapped_X = (GameStateCol * 15) + 10;
+	uint16_t Mapped_Y = (GameStateRow * 15) + 10;
+	
+	DrawSquare(Mapped_X, Mapped_Y, Black);
+	DrawSquare(Mapped_X, Mapped_Y, SpecialBlock.COLOR_CODE);
+	
+	
+
+}
+
 
 void ClearHalfField(void){
 	uint16_t HalfOccupiedField = Highest_Y >> 1;

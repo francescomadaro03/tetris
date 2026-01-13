@@ -1991,10 +1991,11 @@ extern char GAMESTATE[21][10];
   uint8_t HORIZONTAL_LENGTH; // number of blocks from upper coordinates
   uint8_t HORIZONTAL_ROTATE_LENGTH;
   uint8_t VERTICAL_LENGTH;
+  char SPECIAL_BLOCK;
 
 
  } TETRONIM;
-# 33 "./Source\\tetris/backend.h"
+# 34 "./Source\\tetris/backend.h"
 extern void ConfigurationProcedureTiming(void);
 extern void MovementInit(void);
 extern TETRONIM VerticalMovementHandler(TETRONIM t);
@@ -2011,6 +2012,8 @@ void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
 extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
+extern void ClearHalfField(void);
+extern void PowerUpsManagement(void);
 # 16 "Source/timer/IRQ_timer.c" 2
 # 1 "./Source\\tetris/frontend.h" 1
 
@@ -2049,6 +2052,7 @@ extern void ChangeDirection(TETRONIM State, char direction);
 extern uint16_t FindColorCodeFromColor(char color);
 extern void GameOver(void);
 void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim);
+extern TETRONIM SpecialBlockDefinition(void);
 # 17 "Source/timer/IRQ_timer.c" 2
 # 1 "./Source\\led/led.h" 1
 # 12 "./Source\\led/led.h"

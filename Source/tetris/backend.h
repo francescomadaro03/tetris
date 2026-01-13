@@ -18,6 +18,7 @@ extern char GAMESTATE[ROWS][COLS];
 		uint8_t HORIZONTAL_LENGTH; // number of blocks from upper coordinates
 		uint8_t HORIZONTAL_ROTATE_LENGTH;
 		uint8_t VERTICAL_LENGTH;
+		char SPECIAL_BLOCK;
 
 	
 	} TETRONIM;
@@ -47,4 +48,5 @@ extern void Reset_GAMESTATE(void);
 extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
 extern void ClearHalfField(void);
+extern void PowerUpsManagement(void);
 #endif

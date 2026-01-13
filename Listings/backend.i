@@ -388,10 +388,11 @@ extern char GAMESTATE[21][10];
   uint8_t HORIZONTAL_LENGTH; // number of blocks from upper coordinates
   uint8_t HORIZONTAL_ROTATE_LENGTH;
   uint8_t VERTICAL_LENGTH;
+  char SPECIAL_BLOCK;
 
 
  } TETRONIM;
-# 33 "Source/tetris\\backend.h"
+# 34 "Source/tetris\\backend.h"
 extern void ConfigurationProcedureTiming(void);
 extern void MovementInit(void);
 extern TETRONIM VerticalMovementHandler(TETRONIM t);
@@ -408,6 +409,8 @@ void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
 extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
+extern void ClearHalfField(void);
+extern void PowerUpsManagement(void);
 # 4 "Source/tetris/backend.c" 2
 # 1 "./Source/timer\\timer.h" 1
 # 15 "./Source/timer\\timer.h"
@@ -2182,6 +2185,7 @@ extern void ChangeDirection(TETRONIM State, char direction);
 extern uint16_t FindColorCodeFromColor(char color);
 extern void GameOver(void);
 void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim);
+extern TETRONIM SpecialBlockDefinition(void);
 # 8 "Source/tetris/backend.c" 2
 # 1 "./Source/GLCD\\GLCD.h" 1
 # 90 "./Source/GLCD\\GLCD.h"
@@ -2378,6 +2382,10 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
  GUI_Text(170, 25, (uint8_t *) ScoreToString(score), 0xFFFF, 0x0000);
  GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), 0xFFFF, 0x0000);
 
+ if(clearedLinesCount % 5 == 0 && SingleTetronim == 0){
+  PowerUpsManagement();
+ }
+
  if (clearedLinesCount % 10 == 0 && SingleTetronim == 0){
   uint8_t triggerGameOver = RandomMalus(Highest_Y);
   if (triggerGameOver == 1){
@@ -2387,7 +2395,7 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
 
 
 }
-# 199 "Source/tetris/backend.c"
+# 203 "Source/tetris/backend.c"
 //this function will handle the checks and possible
 //function calls to the logic to change the field
 //if some rows are full. the function will
@@ -2619,5 +2627,46 @@ void HandleTimerSpeed(uint8_t PotSpeed){
  CurrentSpeed = BaseSpeed/PotSpeed;
  DoubleSpeed = CurrentSpeed >> 1;
 
+
+}
+
+
+
+void PowerUpsManagement(void){
+ TETRONIM SpecialBlock = SpecialBlockDefinition();
+ uint16_t RandomState = InitialState;
+ uint16_t NextState = LFSR_Random32(RandomState);
+
+ //per prendere le righe occupate faccio 20 - Highest_Y per trovare il valore di righe. poi sommo quel valore a Highest_y per avere la riga giusta
+
+ uint8_t OccupiedRows = 20 - Highest_Y;
+ uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+ NextState = LFSR_Random32(NextState);
+ uint8_t GameStateCol = NextState % 10;
+
+ while(GAMESTATE[GameStateRow][GameStateCol] == '0'){
+  uint16_t NextState = LFSR_Random32(RandomState);
+  uint8_t OccupiedRows = 20 - Highest_Y;
+  uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+  NextState = LFSR_Random32(NextState);
+  uint8_t GameStateCol = NextState % 10;
+ }
+
+ GAMESTATE[GameStateRow][GameStateCol] = SpecialBlock.SPECIAL_BLOCK;
+ uint16_t Mapped_X = (GameStateCol * 15) + 10;
+ uint16_t Mapped_Y = (GameStateRow * 15) + 10;
+
+ DrawSquare(Mapped_X, Mapped_Y, 0x0000);
+ DrawSquare(Mapped_X, Mapped_Y, SpecialBlock.COLOR_CODE);
+
+
+
+}
+
+
+void ClearHalfField(void){
+ uint16_t HalfOccupiedField = Highest_Y >> 1;
+ UpdateGAMESTATE(Highest_Y, HalfOccupiedField, 19);
+ ComputePoints(HalfOccupiedField, 0);
 
 }
