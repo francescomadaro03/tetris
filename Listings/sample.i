@@ -2110,7 +2110,7 @@ int main(void)
  DoubleSpeed = CurrentSpeed >> 1;
  Highest_Y = 19;
  GameOverFlag = 0;
- init_RIT(0x1312D0 << 2); //UPDATE TIMER TO COMPLY WITH LANDTIGER
+ //UPDATE TIMER TO COMPLY WITH LANDTIGER
 
  joystick_init();
   LCD_Initialization();
@@ -2123,6 +2123,7 @@ int main(void)
 
 
  init_tetris_frontend();
+ init_RIT(0x1312D0 << 2);
  //DAC INITIALIZATION
  ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 |= (1<<21);
  ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 &= ~(1<<20);

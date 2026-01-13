@@ -39,8 +39,10 @@ void RIT_IRQHandler (void)
 {	
 
 	LPC_RIT->RICTRL |= 0x1;	/* clear interrupt flag */
+	if(game_paused == 0){
+		ADC_start_conversion();
 	
-	ADC_start_conversion();
+	}
 
 
 	/*

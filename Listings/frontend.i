@@ -2572,6 +2572,8 @@ void GameOver(void){
 
 
 
+
+
 void NewTetroid(void) {
  char typeT;
  uint16_t color_code;

@@ -2378,9 +2378,16 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
  GUI_Text(170, 25, (uint8_t *) ScoreToString(score), 0xFFFF, 0x0000);
  GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), 0xFFFF, 0x0000);
 
+ if (clearedLinesCount % 10 == 0 && SingleTetronim == 0){
+  uint8_t triggerGameOver = RandomMalus(Highest_Y);
+  if (triggerGameOver == 1){
+   GameOver();
+  }
+ }
+
 
 }
-# 192 "Source/tetris/backend.c"
+# 199 "Source/tetris/backend.c"
 //this function will handle the checks and possible
 //function calls to the logic to change the field
 //if some rows are full. the function will
@@ -2558,18 +2565,18 @@ uint8_t AddLastLine(uint8_t * LAST_ROW, uint8_t Highest_Y){
    );
  }
  memset(GAMESTATE[19], '0', 10*sizeof(char));
- //memcpy(GAMESTATE[19], LAST_ROW, 10*sizeof(char));
+ memcpy(GAMESTATE[19], LAST_ROW, 10*sizeof(char));
  return 0;
 }
 
 
 uint8_t RandomMalus(uint8_t Highest_Y){
  uint8_t * MalusRowPositions = ArrayRandomifier();
- uint8_t LAST_ROW[10] = {'0'};
+ uint8_t LAST_ROW[10] = {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
  uint8_t i, triggerGameOverState;
 
  for(i = 9; i>2; i--){
-  LAST_ROW[*MalusRowPositions] = 'm';
+  LAST_ROW[*MalusRowPositions] = 'G';
   MalusRowPositions++;
  }
 
@@ -2579,7 +2586,9 @@ uint8_t RandomMalus(uint8_t Highest_Y){
  }
 
  if(triggerGameOverState == 0){
-  DrawFieldLine(Highest_Y);
+  for(i = Highest_Y; i<20; i++){
+   DrawFieldLine(i);
+  }
  }
  return triggerGameOverState;
 

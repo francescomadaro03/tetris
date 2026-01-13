@@ -46,4 +46,5 @@ void HardDropTetroid(TETRONIM State);
 extern void Reset_GAMESTATE(void);
 extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
+extern void ClearHalfField(void);
 #endif

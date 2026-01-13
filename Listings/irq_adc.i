@@ -1997,15 +1997,17 @@ unsigned short AD_last = 0xFF;
 
 void ADC_IRQHandler(void) {
 
+ unsigned short AD_value;
   AD_current = ((((LPC_ADC_TypeDef *) ((0x40000000UL) + 0x34000) )->ADGDR>>4) & 0xFFF);
-  if(AD_current != AD_last){
-  LED_Off(AD_last*5/0xFFF); // ad_last : AD_max = x : 5
-  LED_On(AD_current*5/0xFFF); // ad_current : AD_max = x : 5
+ AD_value = AD_current*5/0xFFF;
+  if(AD_value != AD_last){
+  LED_Off(AD_last); // ad_last : AD_max = x : 5
+  LED_On(AD_value); // ad_current : AD_max = x : 5
 
   HandleTimerSpeed(AD_current*5/0xFFF);
 
 
 
-  AD_last = AD_current;
+  AD_last = AD_value;
   }
 }

@@ -2060,9 +2060,11 @@ void RIT_IRQHandler (void)
 {
 
  ((LPC_RIT_TypeDef *) ((0x40080000UL) + 0x30000) )->RICTRL |= 0x1;
+ if(game_paused == 0){
+  ADC_start_conversion();
 
- ADC_start_conversion();
-# 52 "Source/RIT/IRQ_RIT.c"
+ }
+# 54 "Source/RIT/IRQ_RIT.c"
  static volatile int key1_pressed = 0;
  volatile uint32_t CurrentSpeed = 0x17D7840;
  volatile uint32_t DoubleSpeed = CurrentSpeed >> 1;

@@ -2399,12 +2399,6 @@ void TIMER0_IRQHandler (void)
    ComputePoints(0,1);
    CheckGAMESTATE(Highest_Y);
    collision = 0;
-   if (clearedLinesCount % 10 == 0){
-    uint8_t triggerGameOver = RandomMalus(Highest_Y);
-    if (triggerGameOver == 1){
-     GameOver();
-    }
-   }
    NewTetroid();
   }
 
@@ -2415,7 +2409,7 @@ void TIMER0_IRQHandler (void)
 
   return;
 }
-# 91 "Source/timer/IRQ_timer.c"
+# 85 "Source/timer/IRQ_timer.c"
 void TIMER1_IRQHandler (void)
 {
 
