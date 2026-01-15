@@ -62,14 +62,14 @@ int main(void)
   LCD_Initialization();
 	ADC_init();
 
-	ConfigurationProcedureTiming();
+	//ConfigurationProcedureTiming();
 	/*enable_timer(1);
 	init_timer(1, 0x1312D0);
 	enable_timer(1);*/
 
 	
 	init_tetris_frontend();
-	init_RIT(0x1312D0 << 2); 
+	init_RIT(0x1C9C38 << 2); 
 	//DAC INITIALIZATION
 	LPC_PINCON->PINSEL1 |= (1<<21);
 	LPC_PINCON->PINSEL1 &= ~(1<<20);			/* pin 0.26 is AOUT */

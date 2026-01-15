@@ -20,6 +20,11 @@ extern uint8_t starting_game;
 
 
 uint16_t LFSR_Random32(uint16_t state){
+	if(state == 0){
+		state = 0x19AF;
+	
+	}
+	
 	uint16_t feedback =  ((state >> 7) ^ (state >> 4) ^ (state >> 3) ^ (state >> 11)) & 0x01;
 	uint16_t new_state = ((state >> 1)) | (feedback << 15);
 	
@@ -71,7 +76,7 @@ char* ScoreToString(uint16_t score){
 
 
 void init_tetris_frontend(void) {
-	clearedLinesCount = 0;
+	clearedLinesCount = 4;
 	
 	
 	
@@ -542,7 +547,7 @@ TETRONIM SpecialBlockDefinition(void){
 		case 1:
 			S.COLOR = FindColorFromCode(Grey);
 			S.COLOR_CODE = Grey;
-			S.SPECIAL_BLOCK = 'C';
+			S.SPECIAL_BLOCK = 'L';
 			break;
 		
 	
@@ -552,3 +557,4 @@ TETRONIM SpecialBlockDefinition(void){
 
 
 }
+

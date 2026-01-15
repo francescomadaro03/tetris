@@ -4,4 +4,4 @@
   C:\Users\frama\AppData\Local\Arm\Packs\Keil\LPC1700_DFP\2.7.2\Device\Include\system_LPC17xx.h \
   Source\timer\timer.h Source\GLCD\GLCD.h Source\TouchPanel\TouchPanel.h \
   Source\tetris\backend.h Source\tetris\frontend.h Source\led\led.h \
-  Source\music\music.h
+  Source\music\music.h Source\ADC\adc.h

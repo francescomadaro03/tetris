@@ -106,6 +106,7 @@ extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
 extern void ClearHalfField(void);
 extern void PowerUpsManagement(void);
+extern void SlowDownGame(void);
 # 4 "Source/tetris\\frontend.h" 2
 
 

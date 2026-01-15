@@ -1868,6 +1868,7 @@ extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
 extern void ClearHalfField(void);
 extern void PowerUpsManagement(void);
+extern void SlowDownGame(void);
 # 16 "Source/RIT/IRQ_RIT.c" 2
 # 1 "./Source\\tetris/frontend.h" 1
 

@@ -2014,6 +2014,7 @@ extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
 extern void ClearHalfField(void);
 extern void PowerUpsManagement(void);
+extern void SlowDownGame(void);
 # 16 "Source/timer/IRQ_timer.c" 2
 # 1 "./Source\\tetris/frontend.h" 1
 
@@ -2371,12 +2372,26 @@ extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
 void InitControllingTimer(void);
 void playNote(void);
 # 20 "Source/timer/IRQ_timer.c" 2
+# 1 "./Source\\ADC/adc.h" 1
+
+
+
+void ADC_init (void);
+void ADC_start_conversion (void);
+void ADC_enable(void);
+void ADC_disable(void);
+
+
+void ADC_IRQHandler(void);
+# 21 "Source/timer/IRQ_timer.c" 2
 
 uint32_t TIMER_SPEED = 0x17D7840;
 uint32_t TIMER_DOUBLE = (0x1312D0 >> 1);
 volatile uint8_t Highest_Y;
 extern uint16_t clearedLinesCount;
-
+extern uint32_t CurrentSpeed;
+extern uint32_t SavedSpeed;
+extern uint8_t SlowedDown;
 uint16_t SinTable[45] =
 {
     410, 467, 523, 576, 627, 673, 714, 749, 778,
@@ -2385,7 +2400,7 @@ uint16_t SinTable[45] =
     169, 125, 87 , 55 , 30 , 12 , 2 , 0 , 6 ,
     20 , 41 , 70 , 105, 146, 193, 243, 297, 353
 };
-# 48 "Source/timer/IRQ_timer.c"
+# 51 "Source/timer/IRQ_timer.c"
 void TIMER0_IRQHandler (void)
 {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->IR = 1;
@@ -2413,7 +2428,7 @@ void TIMER0_IRQHandler (void)
 
   return;
 }
-# 85 "Source/timer/IRQ_timer.c"
+# 88 "Source/timer/IRQ_timer.c"
 void TIMER1_IRQHandler (void)
 {
 
@@ -2440,6 +2455,20 @@ void TIMER2_IRQHandler (void){
  InitControllingTimer();
  playNote();
  ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->IR = 1;
+
+
+}
+
+void TIMER3_IRQHandler (void){
+
+ disable_timer(0);
+ reset_timer(0);
+ ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) ) -> MR0 = SavedSpeed;
+ enable_timer(0);
+ ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x14000) )->IR = 1;
+ CurrentSpeed = SavedSpeed;
+ disable_timer(3);
+ SlowedDown = 0;
 
 
 }

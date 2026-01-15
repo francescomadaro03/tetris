@@ -17,12 +17,15 @@
 #include "led/led.h"
 #include <stdio.h> /*for sprintf*/
 #include "music/music.h"
+#include "ADC/adc.h"
 
 uint32_t TIMER_SPEED = 0x17D7840;
 uint32_t TIMER_DOUBLE = (0x1312D0 >> 1);
 volatile uint8_t Highest_Y;
 extern uint16_t clearedLinesCount;
-
+extern uint32_t CurrentSpeed;
+extern uint32_t SavedSpeed;
+extern uint8_t SlowedDown;
 uint16_t SinTable[45] =                                       
 {
     410, 467, 523, 576, 627, 673, 714, 749, 778,
@@ -109,6 +112,20 @@ void TIMER2_IRQHandler (void){
 	playNote();
 	LPC_TIM2->IR = 1;
 
+
+}
+
+void TIMER3_IRQHandler (void){
+	
+	disable_timer(0);
+	reset_timer(0);
+	LPC_TIM0 -> MR0 = SavedSpeed;
+	enable_timer(0);
+	LPC_TIM3->IR = 1;
+	CurrentSpeed = SavedSpeed;
+	disable_timer(3);
+	SlowedDown = 0;
+	
 
 }
 /******************************************************************************

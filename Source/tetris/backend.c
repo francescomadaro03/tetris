@@ -8,6 +8,8 @@
 #include "GLCD.h"
 #include "collision_header.h"
 
+#include "ADC/adc.h"
+
 /* ===================================================================
 	 This file handles all gaming logic of the TETRIS GAME.
 	 Some other feature related to frontend management are placed
@@ -30,6 +32,30 @@ extern uint16_t clearedLinesCount;
 extern uint32_t CurrentSpeed;
 extern uint32_t DoubleSpeed;
 
+volatile char PowerUpFlag = '0';
+volatile uint8_t FoundPowerUp = 0;
+volatile uint32_t SavedSpeed;
+uint8_t SlowedDown = 0;
+uint8_t ClearedLinesOnce = 0;
+
+
+void DrawPowerup_S(uint16_t x0, uint16_t y0) {
+	DrawSquare(x0, y0, Black);
+	GUI_Text(x0+4, y0, (uint8_t *) "S", White, Black);
+	LCD_DrawLine(x0,y0,x0+14,y0, White);
+	LCD_DrawLine(x0,y0+14,x0+14,y0+14, White);
+	LCD_DrawLine(x0,y0,x0,y0+14, White);
+	LCD_DrawLine(x0+14,y0,x0+14,y0+14, White);
+}
+
+void DrawPowerup_C(uint16_t x0, uint16_t y0) {
+	DrawSquare(x0, y0, Black);
+	GUI_Text(x0+4, y0, (uint8_t *) "L", White, Black);
+	LCD_DrawLine(x0,y0,x0+14,y0, White);
+	LCD_DrawLine(x0,y0+14,x0+14,y0+14, White);
+	LCD_DrawLine(x0,y0,x0,y0+14, White);
+	LCD_DrawLine(x0+14,y0,x0+14,y0+14, White);
+}
 
 char GAMESTATE[ROWS][COLS] = { \
     {'0','0','0','0','0','0','0','0','0','0'}, \
@@ -178,9 +204,10 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
 
 	GUI_Text(170, 25, (uint8_t *) ScoreToString(score), White, Black);
 	GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), White, Black);
-	
+		
 	if(clearedLinesCount % 5 == 0 && SingleTetronim == 0){
 		PowerUpsManagement();
+	
 	}
 	
 	if (clearedLinesCount % 10 == 0 && SingleTetronim == 0){
@@ -206,7 +233,7 @@ HERE STARTS THE LOGIC TO HANDLE THE GAME WIN CONDITIONS
 //return 0 if no collisions are found
 uint8_t CheckFullRow(uint8_t row){
 	
-	
+	//this function will be extended to handle management of power ups
 	char *p = &GAMESTATE[row][0];
 	uint8_t i;
 
@@ -216,11 +243,35 @@ uint8_t CheckFullRow(uint8_t row){
 			return 0;
 		
 		}
-		
 
 	}
 	
 	return 1;
+}
+
+uint8_t CheckPowerUpInFullLine(uint8_t row){
+	char *p = &GAMESTATE[row][0];
+	uint8_t i;
+	
+	char value = *p;
+	
+	for(i = 0; i<10; i++, p++){
+		
+		if(*p == 'L'){
+			PowerUpFlag = 'L';
+			return 1;
+		}
+		if(*p == 'S'){
+			PowerUpFlag = 'S';
+			
+			return 1;
+		}
+
+	
+	}
+	return 0;
+	
+
 }
 
 void DrawFieldLine(uint8_t row){
@@ -234,10 +285,20 @@ void DrawFieldLine(uint8_t row){
 		OnScreenX = (i*15) + 10;
 		DrawSquare(OnScreenX, OnScreenY, 0x0000);
 		color_string = GAMESTATE[row][i];
-		color_code = FindColorCodeFromColor(color_string);
-		DrawSquare(OnScreenX, OnScreenY, color_code);
-	}
+		if(color_string == 'L'){
+			DrawPowerup_C(OnScreenX, OnScreenY);
+		
+		}
+		else if(color_string == 'S'){
+			DrawPowerup_S(OnScreenX, OnScreenY);
+		}
+		else{
+			color_code = FindColorCodeFromColor(color_string);
+			DrawSquare(OnScreenX, OnScreenY, color_code);
+		}
+	
 
+	}
 }
 
 
@@ -250,8 +311,17 @@ void CheckGAMESTATE(uint8_t row){
 	volatile int8_t LastIndexFull = 30;
 	volatile uint8_t i;
 	
+	FoundPowerUp = 0;
+	
 	for(i = row; i<20; i++){
 		FlagValue = CheckFullRow(i);
+		
+		if(FlagValue == 1 && FoundPowerUp == 0){
+			FoundPowerUp = CheckPowerUpInFullLine(i);
+			
+		}
+		
+		
 		if(FlagValue == 1 && ChangeState == 0){
 			FirstIndexFull = i;
 			FullRows++;
@@ -284,7 +354,10 @@ void CheckGAMESTATE(uint8_t row){
 void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull){
 	volatile int8_t FullRows = LastIndexFull - FirstIndexFull + 1; //this variable takes all rows that are not full before the first one
 	volatile int8_t i;
-
+	
+	Highest_Y += FullRows;
+	
+	
 	for(i = FirstIndexFull-1; i>=row; i--){
 		memmove(GAMESTATE[i + FullRows], GAMESTATE[i], 10);	
 	}
@@ -300,13 +373,25 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull){
 	for(; i<=LastIndexFull; i++){
 		DrawFieldLine(i);
 	}
-	
+		
 	ComputePoints(FullRows, 0);
+	
+	if(PowerUpFlag == 'L' && ClearedLinesOnce == 0){
+		ClearHalfField();
+	}
+	else if(PowerUpFlag == 'S'){
+		SlowDownGame();	
+	}
+	if(ClearedLinesOnce == 1){
+		ClearedLinesOnce = 0;
+	
+	}
 	
 
 	
 	
 }
+
 
 
 
@@ -415,23 +500,25 @@ Here we will handle the logic to speed up the game
 ===================================================================================*/
 
 void HandleTimerSpeed(uint8_t PotSpeed){
-	
-	if(PotSpeed == 0) {
-		PotSpeed = 1;
+	if(SlowedDown == 0){
+		if(PotSpeed == 0) {
+			PotSpeed = 1;
+		}
+		
+		if(PotSpeed > 5){
+			PotSpeed = 5;
+		}
+		
+		uint32_t BaseSpeed = 0x17D7840;
+		disable_timer(0);
+		LPC_TIM0 -> TC = 0;
+		LPC_TIM0 -> MR0 = BaseSpeed/PotSpeed;
+		enable_timer(0);
+		
+		CurrentSpeed = BaseSpeed/PotSpeed;
+		DoubleSpeed = CurrentSpeed >> 1;
 	}
-	
-	if(PotSpeed > 5){
-		PotSpeed = 5;
-	}
-	
-	uint32_t BaseSpeed = 0x17D7840;
-	disable_timer(0);
-	LPC_TIM0 -> TC = 0;
-	LPC_TIM0 -> MR0 = BaseSpeed/PotSpeed;
-	enable_timer(0);
-	
-	CurrentSpeed = BaseSpeed/PotSpeed;
-	DoubleSpeed = CurrentSpeed >> 1;
+
 	
 
 }
@@ -440,39 +527,59 @@ void HandleTimerSpeed(uint8_t PotSpeed){
 
 void PowerUpsManagement(void){
 	TETRONIM SpecialBlock = SpecialBlockDefinition();
-	uint16_t RandomState = InitialState;
-	uint16_t NextState = LFSR_Random32(RandomState);
+	SpecialBlock.SPECIAL_BLOCK = 'L';
+	volatile uint16_t RandomState = InitialState;
+	volatile uint16_t NextState = LFSR_Random32(RandomState);
 	
 	//per prendere le righe occupate faccio 20 - Highest_Y per trovare il valore di righe. poi sommo quel valore a Highest_y per avere la riga giusta
 	
-	uint8_t OccupiedRows = 20 - Highest_Y;
-	uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+	volatile uint8_t OccupiedRows = 19 - Highest_Y;
+	volatile uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
 	NextState = LFSR_Random32(NextState);
 	uint8_t GameStateCol = NextState % 10;
+	char ChosenPlace = GAMESTATE[GameStateRow][GameStateCol];
 	
-	while(GAMESTATE[GameStateRow][GameStateCol] == '0'){
-		uint16_t NextState = LFSR_Random32(RandomState);
-		uint8_t OccupiedRows = 20 - Highest_Y;
-		uint8_t GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+	while(ChosenPlace == '0'){
 		NextState = LFSR_Random32(NextState);
-		uint8_t GameStateCol = NextState % 10;		
+		GameStateRow = (NextState % OccupiedRows) + Highest_Y;
+		NextState = LFSR_Random32(NextState);
+		GameStateCol = NextState % 10;
+		ChosenPlace = GAMESTATE[GameStateRow][GameStateCol];
 	}
 	
 	GAMESTATE[GameStateRow][GameStateCol] = SpecialBlock.SPECIAL_BLOCK;
+	char debugVal = GAMESTATE[GameStateRow][GameStateCol];
 	uint16_t Mapped_X = (GameStateCol * 15) + 10;
 	uint16_t Mapped_Y = (GameStateRow * 15) + 10;
 	
 	DrawSquare(Mapped_X, Mapped_Y, Black);
-	DrawSquare(Mapped_X, Mapped_Y, SpecialBlock.COLOR_CODE);
+	DrawPowerup_S(Mapped_X, Mapped_Y);
+	
 	
 	
 
 }
 
 
-void ClearHalfField(void){
-	uint16_t HalfOccupiedField = Highest_Y >> 1;
-	UpdateGAMESTATE(Highest_Y, HalfOccupiedField, 19);
-	ComputePoints(HalfOccupiedField, 0);
+
+
+
+void SlowDownGame(void){
+	SlowedDown = 1;
+	if(CurrentSpeed != 0x17D7840){
+		SavedSpeed = CurrentSpeed;
+		CurrentSpeed = 0x17D7840;
+		
+		//slow down part
+		disable_timer(0);
+		LPC_TIM0 -> MR0 = CurrentSpeed;
+		reset_timer(0);
+		//timer part to handle 15 sec specifications
+		init_timer(3, 0x165A0BC0);
+		enable_timer(3);
+	}
+		
+		
+
 
 }

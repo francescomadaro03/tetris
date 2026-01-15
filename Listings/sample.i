@@ -1886,6 +1886,7 @@ extern uint8_t RandomMalus(uint8_t Highest_Y);
 extern void HandleTimerSpeed(uint8_t PotSpeed);
 extern void ClearHalfField(void);
 extern void PowerUpsManagement(void);
+extern void SlowDownGame(void);
 # 4 "Source\\tetris/frontend.h" 2
 
 
@@ -2120,14 +2121,14 @@ int main(void)
   LCD_Initialization();
  ADC_init();
 
- ConfigurationProcedureTiming();
+ //ConfigurationProcedureTiming();
 
 
 
 
 
  init_tetris_frontend();
- init_RIT(0x1312D0 << 2);
+ init_RIT(0x1C9C38 << 2);
  //DAC INITIALIZATION
  ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 |= (1<<21);
  ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 &= ~(1<<20);
