@@ -1,0 +1,31 @@
+# Keil uVision build output
+Objects/
+Listings/
+*.axf
+*.o
+*.d
+*.crf
+*.dep
+*.lnp
+*.sct
+*.htm
+*.iex
+*.map
+*.lst
+*.i
+*.bak
+*.tra
+*.plg
+*.sdi
+*.__i
+*.__o
+
+# Keil per-user IDE state (window layout, paths)
+*.uvguix*
+*.uvgui.*
+JLinkLog.txt
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
