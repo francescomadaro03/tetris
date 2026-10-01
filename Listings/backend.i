@@ -2272,6 +2272,9 @@ volatile uint8_t FoundPowerUp = 0;
 volatile uint32_t SavedSpeed;
 uint8_t SlowedDown = 0;
 uint8_t ClearedLinesOnce = 0;
+uint8_t ClearedLineFlag;
+volatile uint8_t PowerUpMultiplier = 1;
+volatile uint8_t MalusMultiplier = 1;
 
 
 void DrawPowerup_S(uint16_t x0, uint16_t y0) {
@@ -2283,7 +2286,7 @@ void DrawPowerup_S(uint16_t x0, uint16_t y0) {
  LCD_DrawLine(x0+14,y0,x0+14,y0+14, 0xFFFF);
 }
 
-void DrawPowerup_C(uint16_t x0, uint16_t y0) {
+void DrawPowerup_L(uint16_t x0, uint16_t y0) {
  DrawSquare(x0, y0, 0x0000);
  GUI_Text(x0+4, y0, (uint8_t *) "L", 0xFFFF, 0x0000);
  LCD_DrawLine(x0,y0,x0+14,y0, 0xFFFF);
@@ -2293,7 +2296,7 @@ void DrawPowerup_C(uint16_t x0, uint16_t y0) {
 }
 
 char GAMESTATE[21][10] = { {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}, {'0','0','0','0','0','0','0','0','0','0'}
-# 82 "Source/tetris/backend.c"
+# 85 "Source/tetris/backend.c"
 };
 
 
@@ -2405,12 +2408,10 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
 
  //100 per riga, 10 per piazzamento, 600 se ho tetris
  if(SingleTetronim == 0){
-  if(CanceledRows != 4){
-  score += (CanceledRows*100);
-  }
-  else {
-   score += 600;
-  }
+  uint16_t MultipleOfFour = CanceledRows / 4;
+  uint16_t NotMultiple = CanceledRows % 4;
+  score += (MultipleOfFour*600);
+  score += NotMultiple*100;
 
  }
  else {
@@ -2420,21 +2421,22 @@ void ComputePoints(uint16_t CanceledRows, uint8_t SingleTetronim){
  GUI_Text(170, 25, (uint8_t *) ScoreToString(score), 0xFFFF, 0x0000);
  GUI_Text(170, 100, (uint8_t *) ScoreToString(clearedLinesCount), 0xFFFF, 0x0000);
 
- if(clearedLinesCount % 5 == 0 && SingleTetronim == 0){
+ if(clearedLinesCount >= 5*PowerUpMultiplier && SingleTetronim == 0){
   PowerUpsManagement();
-
+  PowerUpMultiplier++;
  }
 
- if (clearedLinesCount % 10 == 0 && SingleTetronim == 0){
+ if (clearedLinesCount>= MalusMultiplier*10 && SingleTetronim == 0){
   uint8_t triggerGameOver = RandomMalus(Highest_Y);
   if (triggerGameOver == 1){
    GameOver();
   }
+  MalusMultiplier++;
  }
 
 
 }
-# 230 "Source/tetris/backend.c"
+# 232 "Source/tetris/backend.c"
 //this function will handle the checks and possible
 //function calls to the logic to change the field
 //if some rows are full. the function will
@@ -2494,7 +2496,7 @@ void DrawFieldLine(uint8_t row){
   DrawSquare(OnScreenX, OnScreenY, 0x0000);
   color_string = GAMESTATE[row][i];
   if(color_string == 'L'){
-   DrawPowerup_C(OnScreenX, OnScreenY);
+   DrawPowerup_L(OnScreenX, OnScreenY);
 
   }
   else if(color_string == 'S'){
@@ -2562,8 +2564,8 @@ void CheckGAMESTATE(uint8_t row){
 void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull){
  volatile int8_t FullRows = LastIndexFull - FirstIndexFull + 1; //this variable takes all rows that are not full before the first one
  volatile int8_t i;
-
- Highest_Y += FullRows;
+ ClearedLineFlag = 1;
+ Highest_Y += FullRows-1;
 
 
  for(i = FirstIndexFull-1; i>=row; i--){
@@ -2583,6 +2585,8 @@ void UpdateGAMESTATE(int8_t row, int8_t FirstIndexFull, int8_t LastIndexFull){
  }
 
  ComputePoints(FullRows, 0);
+
+
 
  if(PowerUpFlag == 'L' && ClearedLinesOnce == 0){
   ClearHalfField();
@@ -2681,6 +2685,7 @@ uint8_t RandomMalus(uint8_t Highest_Y){
  uint8_t * MalusRowPositions = ArrayRandomifier();
  uint8_t LAST_ROW[10] = {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
  uint8_t i, triggerGameOverState;
+ Highest_Y -= 1;
 
  for(i = 9; i>2; i--){
   LAST_ROW[*MalusRowPositions] = 'G';
@@ -2735,7 +2740,6 @@ void HandleTimerSpeed(uint8_t PotSpeed){
 
 void PowerUpsManagement(void){
  TETRONIM SpecialBlock = SpecialBlockDefinition();
- SpecialBlock.SPECIAL_BLOCK = 'L';
  volatile uint16_t RandomState = InitialState;
  volatile uint16_t NextState = LFSR_Random32(RandomState);
 
@@ -2746,8 +2750,10 @@ void PowerUpsManagement(void){
  NextState = LFSR_Random32(NextState);
  uint8_t GameStateCol = NextState % 10;
  char ChosenPlace = GAMESTATE[GameStateRow][GameStateCol];
+ uint8_t trials = 0;
 
- while(ChosenPlace == '0'){
+ while(ChosenPlace == '0' || trials <= 200){
+  trials ++;
   NextState = LFSR_Random32(NextState);
   GameStateRow = (NextState % OccupiedRows) + Highest_Y;
   NextState = LFSR_Random32(NextState);
@@ -2761,7 +2767,13 @@ void PowerUpsManagement(void){
  uint16_t Mapped_Y = (GameStateRow * 15) + 10;
 
  DrawSquare(Mapped_X, Mapped_Y, 0x0000);
- DrawPowerup_S(Mapped_X, Mapped_Y);
+ if(SpecialBlock.SPECIAL_BLOCK == 'L'){
+  DrawPowerup_L(Mapped_X, Mapped_Y);
+
+ }
+ else{
+  DrawPowerup_S(Mapped_X, Mapped_Y);
+ }
 
 
 
@@ -2770,7 +2782,15 @@ void PowerUpsManagement(void){
 
 
 
+void UpdateClearedField(uint16_t HalfOccupiedField){
+ UpdateGAMESTATE(Highest_Y, HalfOccupiedField, 19);
+}
 
+void ClearHalfField(void){
+ uint16_t Half_HighestY = (19 - Highest_Y) >> 1;
+ uint16_t HalfOccupiedField = 19 - Half_HighestY;
+ PowerUpFlag = '0'; UpdateClearedField(HalfOccupiedField);
+}
 
 void SlowDownGame(void){
  SlowedDown = 1;

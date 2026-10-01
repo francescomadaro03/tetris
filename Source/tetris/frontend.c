@@ -4,6 +4,7 @@
 #include "backend.h"
 #include "GLCD.h"
 #include "timer.h"
+#include "ADC/adc.h"
 
 volatile uint16_t record = 0;
 volatile uint16_t score = 0;
@@ -14,6 +15,8 @@ volatile uint8_t GameOverFlag = 1;
 extern uint8_t Highest_Y;
 extern int game_paused;
 extern uint8_t starting_game;
+extern uint8_t MalusMultiplier;
+extern uint8_t PowerUpMultiplier;
 
 
 
@@ -76,7 +79,7 @@ char* ScoreToString(uint16_t score){
 
 
 void init_tetris_frontend(void) {
-	clearedLinesCount = 4;
+	clearedLinesCount = 0;
 	
 	
 	
@@ -195,10 +198,10 @@ void DrawTetroid_L(uint16_t x0, uint16_t y0, uint16_t color, uint8_t rotation){
 		DrawSquare(x0+15, y0+30, color);	
 	}
 	if (rotation == 1) {
-		DrawSquare(x0, y0+30, color);
-		DrawSquare(x0, y0+45, color);
-		DrawSquare(x0+15, y0+30, color);
-		DrawSquare(x0+30, y0+30, color);	
+		DrawSquare(x0, y0, color);
+		DrawSquare(x0, y0+15, color);
+		DrawSquare(x0+15, y0, color);
+		DrawSquare(x0+30, y0, color);	
 	}
 		return;
 }
@@ -492,7 +495,9 @@ uint16_t Find_Color_From_Type(char tetroid_type) {
 }
 
 void GameOver(void){
-	 
+	ADC_disable();
+	PowerUpMultiplier = 0;
+	MalusMultiplier = 0;
 	disable_timer(0);
 	GameOverFlag = 1;
 	clearedLinesCount = 0;
@@ -524,7 +529,7 @@ void NewTetroid(void) {
 	uint16_t color_code;
 	typeT = RandomTetroidGenerator();
 	color_code = Find_Color_From_Type(typeT);
-	State = TetroidDrawer(55, 10, color_code, 0, 'I');
+	State = TetroidDrawer(55, 10, color_code, 0, typeT);
 	MovementInit();	
 	
 	return;

@@ -1946,8 +1946,10 @@ void EINT3_IRQHandler(void);
 # 33 "Source/sample.c" 2
 # 1 "Source\\music/music.h" 1
 # 96 "Source\\music/music.h"
-void InitControllingTimer(void);
-void playNote(void);
+void InitMusicTimer(void);
+void PlayNote(void);
+void InitClearedLine(void);
+void playNoteClearedLine(void);
 # 34 "Source/sample.c" 2
 # 1 "Source\\ADC/adc.h" 1
 # 1 "C:\\Users\\frama\\AppData\\Local\\Keil_v5\\ARM\\ARMCLANG\\bin\\..\\include\\string.h" 1 3
@@ -2095,7 +2097,7 @@ void ADC_IRQHandler(void);
 
 
 
-
+extern uint8_t ScaleFlag; // <- ScaleFlag needs to visible in order for the emulator to find the symbol (can be placed also inside system_LPC17xx.h but since it is RO, it needs more work)
 
 
 
@@ -2121,13 +2123,14 @@ int main(void)
   LCD_Initialization();
  ADC_init();
 
- //ConfigurationProcedureTiming();
+ ConfigurationProcedureTiming();
 
 
 
 
 
  init_tetris_frontend();
+ InitMusicTimer();
  init_RIT(0x1C9C38 << 2);
  //DAC INITIALIZATION
  ((LPC_PINCON_TypeDef *) ((0x40000000UL) + 0x2C000) )->PINSEL1 |= (1<<21);

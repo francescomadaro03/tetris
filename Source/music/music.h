@@ -1,4 +1,3 @@
-
 #define NOTE_B0  31
 #define NOTE_C1  33
 #define NOTE_CS1 35
@@ -89,11 +88,14 @@
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
 
-#define BASE_LENGTH 0x2DC6C0
+#define BASE_LENGTH 0x500000
 
-#ifndef __MUSIC_FUNC
-#define __MUSIC_FUNC
-void InitControllingTimer(void);
-void playNote(void);
+#ifndef __MUSIC
+#define __MUSIC
+
+void InitMusicTimer(void);
+void PlayNote(void);
+void InitClearedLine(void);
+void playNoteClearedLine(void);
 
 #endif

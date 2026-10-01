@@ -2369,8 +2369,10 @@ extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
 # 19 "Source/timer/IRQ_timer.c" 2
 # 1 "./Source\\music/music.h" 1
 # 96 "./Source\\music/music.h"
-void InitControllingTimer(void);
-void playNote(void);
+void InitMusicTimer(void);
+void PlayNote(void);
+void InitClearedLine(void);
+void playNoteClearedLine(void);
 # 20 "Source/timer/IRQ_timer.c" 2
 # 1 "./Source\\ADC/adc.h" 1
 
@@ -2392,6 +2394,7 @@ extern uint16_t clearedLinesCount;
 extern uint32_t CurrentSpeed;
 extern uint32_t SavedSpeed;
 extern uint8_t SlowedDown;
+extern uint8_t ClearedLineFlag;
 uint16_t SinTable[45] =
 {
     410, 467, 523, 576, 627, 673, 714, 749, 778,
@@ -2400,7 +2403,7 @@ uint16_t SinTable[45] =
     169, 125, 87 , 55 , 30 , 12 , 2 , 0 , 6 ,
     20 , 41 , 70 , 105, 146, 193, 243, 297, 353
 };
-# 51 "Source/timer/IRQ_timer.c"
+# 52 "Source/timer/IRQ_timer.c"
 void TIMER0_IRQHandler (void)
 {
  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x04000) )->IR = 1;
@@ -2428,7 +2431,7 @@ void TIMER0_IRQHandler (void)
 
   return;
 }
-# 88 "Source/timer/IRQ_timer.c"
+# 89 "Source/timer/IRQ_timer.c"
 void TIMER1_IRQHandler (void)
 {
 
@@ -2436,7 +2439,7 @@ void TIMER1_IRQHandler (void)
   static int sineticks=0;
 
  static int currentValue;
- currentValue = SinTable[sineticks]*0.1;
+ currentValue = SinTable[sineticks]*0.6;
  ((LPC_DAC_TypeDef *) ((0x40080000UL) + 0x0C000) )->DACR = currentValue <<6;
  sineticks++;
  if(sineticks==45){
@@ -2451,10 +2454,19 @@ void TIMER1_IRQHandler (void)
 
 
 void TIMER2_IRQHandler (void){
+ if(ClearedLineFlag == 1){
+  InitClearedLine();
+  playNoteClearedLine();
 
- InitControllingTimer();
- playNote();
+ }
+ else {
+
+  InitMusicTimer();
+  playNote();
+ }
+
  ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->IR = 1;
+
 
 
 }
@@ -2469,6 +2481,5 @@ void TIMER3_IRQHandler (void){
  CurrentSpeed = SavedSpeed;
  disable_timer(3);
  SlowedDown = 0;
-
 
 }

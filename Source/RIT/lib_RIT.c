@@ -71,7 +71,7 @@ uint32_t init_RIT ( uint32_t RITInterval )
 
 	
 	NVIC_EnableIRQ(RIT_IRQn);
-	NVIC_SetPriority(RIT_IRQn, 0);
+	NVIC_SetPriority(RIT_IRQn, 1);
 	LPC_RIT->RICOUNTER = 0; 
   return (0);
 }

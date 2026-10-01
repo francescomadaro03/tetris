@@ -26,6 +26,7 @@ extern uint16_t clearedLinesCount;
 extern uint32_t CurrentSpeed;
 extern uint32_t SavedSpeed;
 extern uint8_t SlowedDown;
+extern uint8_t ClearedLineFlag;
 uint16_t SinTable[45] =                                       
 {
     410, 467, 523, 576, 627, 673, 714, 749, 778,
@@ -92,7 +93,7 @@ void TIMER1_IRQHandler (void)
   static int sineticks=0;
 	/* DAC management */	
 	static int currentValue; 
-	currentValue = SinTable[sineticks]*0.1;
+	currentValue = SinTable[sineticks]*0.6;
 	LPC_DAC->DACR = currentValue <<6;
 	sineticks++;
 	if(sineticks==45){
@@ -107,10 +108,19 @@ void TIMER1_IRQHandler (void)
 
 
 void TIMER2_IRQHandler (void){
+	if(ClearedLineFlag == 1){
+		InitClearedLine();
+		playNoteClearedLine();
 	
-	InitControllingTimer();
-	playNote();
+	}
+	else {
+		
+		InitMusicTimer();
+		playNote();
+	}
+
 	LPC_TIM2->IR = 1;
+
 
 
 }
@@ -125,7 +135,6 @@ void TIMER3_IRQHandler (void){
 	CurrentSpeed = SavedSpeed;
 	disable_timer(3);
 	SlowedDown = 0;
-	
 
 }
 /******************************************************************************

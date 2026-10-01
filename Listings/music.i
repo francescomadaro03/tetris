@@ -7,8 +7,10 @@
 # 1 "Source/music/music.c" 2
 # 1 "Source/music\\music.h" 1
 # 96 "Source/music\\music.h"
-void InitControllingTimer(void);
-void playNote(void);
+void InitMusicTimer(void);
+void PlayNote(void);
+void InitClearedLine(void);
+void playNoteClearedLine(void);
 # 2 "Source/music/music.c" 2
 # 1 "./Source/timer\\timer.h" 1
 # 10 "./Source/timer\\timer.h"
@@ -1800,86 +1802,108 @@ typedef struct
 # 5 "Source/music/music.c" 2
 
 extern volatile starting_game;
-int melody[] = {
-    // Battuta 1 (E)
+extern uint8_t ClearedLineFlag;
+int tetris_melody[] = {
     659, 494, 523, 587, 523, 494,
-    // Battuta 2 (Am)
     440, 440, 523, 659, 587, 523,
-    // Battuta 3 (E/G# - ma melodia senza alterazioni)
     494, 494, 523, 587, 659,
-    // Battuta 4 (Am) - La pausa finale è accorpata all'ultimo A4
-    523, 440, 440,
+    523, 440, 440, 0,
 
-    // Battuta 5 (Dm)
     587, 698, 880, 784, 698,
-    // Battuta 6 (C)
     659, 523, 659, 587, 523,
-    // Battuta 7 (E/B)
     494, 494, 523, 587, 659,
-    // Battuta 8 (Am) - La pausa finale è accorpata all'ultimo A4
-    523, 440, 440
+    523, 440, 440, 0
 };
 
-uint8_t noteDurations[] = {
-    4, 2, 2, 4, 2, 2,
-    4, 2, 2, 4, 2, 2,
-    4, 2, 2, 4, 4,
-    4, 4, 8,
-    6, 2, 4, 2, 2,
-    6, 2, 4, 2, 2,
-    4, 2, 2, 4, 4,
-    4, 4, 8
+uint8_t noteDurations1[] = {
+  2, 1, 1, 1, 1, 1,
+  1, 1, 2, 1, 1, 2,
+  1, 1, 2, 1, 1,
+  2, 2, 2, 4,
+
+  1, 2, 1, 1, 2,
+  2, 1, 2, 1, 2,
+  1, 1, 2, 1, 1,
+  2, 2, 2, 4
 };
 
-uint16_t ClockCyclesFromFrequency(int freq){
- uint16_t ClockCycles;
- ClockCycles = 25000000 / (freq * 45);
+
+int clearedLineSounds[] = {
+    1319, 1397, 1245
+};
+
+uint8_t noteDurations2[] = {
+  1,1,1
+};
+
+uint32_t ClockCycleFromFrequency(int frequency) {
+ uint32_t ClockCycles;
+ ClockCycles = 25000000 / (frequency * 45);
  return ClockCycles;
-
-
 }
 
-void InitControllingTimer(void){
- static uint32_t iterations = 0;
- volatile uint32_t TimerLength = 0x2DC6C0*noteDurations[iterations];
+void InitMusicTimer(void) {
+ static volatile uint8_t NoteDurationIndex = 0;
+ uint8_t volatile NoteDuration = noteDurations1[NoteDurationIndex];
+ uint32_t volatile EffectiveDuration = 0x500000*NoteDuration;
  disable_timer(2);
  reset_timer(2);
- if(starting_game == 1){
-  init_timer(2, TimerLength);
- }
- else {
-  ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->MR0 = TimerLength;
-  ((LPC_TIM_TypeDef *) ((0x40080000UL) + 0x10000) )->MCR = 3;
- }
+ init_timer(2, EffectiveDuration);
  enable_timer(2);
- iterations++;
- if(iterations > (sizeof(melody) / sizeof(melody[0]))){
-  iterations = 0;
+ NoteDurationIndex++;
+ if(NoteDurationIndex == 40) {
+  NoteDurationIndex = 0;
  }
-
-
-
 }
 
-void playNote(void){
- static uint32_t iterations = 0;
- volatile uint32_t ClockCyclesCount = ClockCyclesFromFrequency(melody[iterations]);
- disable_timer(1);
- reset_timer(1);
- if(starting_game == 1){
-  init_timer(1, ClockCyclesCount);
+void InitClearedLine(void) {
+ static volatile uint8_t NoteDurationIndexC = 0;
+ uint8_t volatile NoteDuration = noteDurations2[NoteDurationIndexC];
+ uint32_t volatile EffectiveDuration = 0x500000*NoteDuration;
+ disable_timer(2);
+ reset_timer(2);
+ init_timer(2, EffectiveDuration);
+ enable_timer(2);
+ NoteDurationIndexC++;
+ if(NoteDurationIndexC == 3) {
+  NoteDurationIndexC = 0;
+ }
+}
+
+void playNote(void) {
+ static volatile uint16_t NoteIndex = 0;
+ if (tetris_melody[NoteIndex] != 0) {
+  volatile uint32_t ClockCycles = ClockCycleFromFrequency(tetris_melody[NoteIndex]);
+  disable_timer(1);
+  reset_timer(1);
+  init_timer(1, ClockCycles);
+  enable_timer(1);
  }
  else {
-  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->MR0 = ClockCyclesCount;
-  ((LPC_TIM_TypeDef *) ((0x40000000UL) + 0x08000) )->MCR = 3;
+  disable_timer(1);
  }
- enable_timer(1);
- iterations++;
- if(iterations > (sizeof(noteDurations) / sizeof(noteDurations[0]))){
-  iterations = 0;
-
+ NoteIndex++;
+ if(NoteIndex == 40) {
+  NoteIndex = 0;
  }
+}
 
 
-
+void playNoteClearedLine(void) {
+ static volatile uint16_t NoteIndex = 0;
+ if (tetris_melody[NoteIndex] != 0) {
+  volatile uint32_t ClockCycles = ClockCycleFromFrequency(clearedLineSounds[NoteIndex]);
+  disable_timer(1);
+  reset_timer(1);
+  init_timer(1, ClockCycles);
+  enable_timer(1);
+ }
+ else {
+  disable_timer(1);
+ }
+ NoteIndex++;
+ if(NoteIndex == 3) {
+  ClearedLineFlag = 0;
+  NoteIndex = 0;
+ }
 }
